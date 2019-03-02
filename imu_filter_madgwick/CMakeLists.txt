@@ -17,18 +17,59 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(ament_cmake_ros REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
-add_executable(imu_filter_madgwick src/imu_filter_madgwick_node.cpp)
+add_library(imu_filter_madgwick
+  src/imu_filter_madgwick.cpp)
+  
 target_include_directories(imu_filter_madgwick PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-install(TARGETS imu_filter_madgwick
+ament_target_dependencies(imu_filter_madgwick
+  "rclcpp"
+  "std_msgs"
+  "sensor_msgs")
+  
+target_compile_definitions(imu_filter_madgwick PRIVATE "IMU_FILTER_MADGWICK_BUILDING_LIBRARY")
+
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+install(
+  TARGETS imu_filter_madgwick
+  EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+add_executable(imu_filter_madgwick_node src/imu_filter_madgwick_node.cpp)
+target_include_directories(imu_filter_madgwick_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(imu_filter_madgwick_node imu_filter_madgwick)
+
+install(TARGETS imu_filter_madgwick_node
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME})
+
+ament_export_dependencies(
+  "sensor_msgs"
+)
+ament_export_include_directories(
+  include
+)
+ament_export_interfaces(
+  export_${PROJECT_NAME}
+)
+ament_export_libraries(
+  imu_filter_madgwick
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
