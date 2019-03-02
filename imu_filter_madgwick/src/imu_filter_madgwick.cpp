@@ -9,8 +9,8 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
 
   imuRawSub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
-    [=](sensor_msgs::msg::Imu imuRawMsg) {
-      imuPub_->publish(imuRawMsg);
+    [ = ](sensor_msgs::msg::Imu::SharedPtr imuRawMsg) {
+      imuPub_->publish(imuRawMsg.get());
     });
 
   // something
