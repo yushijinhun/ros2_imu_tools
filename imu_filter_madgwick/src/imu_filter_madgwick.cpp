@@ -1,5 +1,4 @@
 #include "imu_filter_madgwick/imu_filter_madgwick.hpp"
-#include "imu_filter_madgwick/MadgwickAHRS.h"
 
 namespace imu_filter_madgwick {
 
@@ -19,12 +18,12 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
       double gy = imuRawMsg.get()->angular_velocity.y;
       double gz = imuRawMsg.get()->angular_velocity.z;
 
-      MadgwickAHRSupdateIMU(gx, gy, gz, ax, ay, az);
+      filter.updateIMU(gx, gy, gz, ax, ay, az);
 
-      imuRawMsg->orientation.w = q0;
-      imuRawMsg->orientation.x = q1;
-      imuRawMsg->orientation.y = q2;
-      imuRawMsg->orientation.z = q3;
+      imuRawMsg->orientation.w = filter.q0;
+      imuRawMsg->orientation.x = filter.q1;
+      imuRawMsg->orientation.y = filter.q2;
+      imuRawMsg->orientation.z = filter.q3;
 
       imuPub_->publish(imuRawMsg.get());
     });
@@ -34,6 +33,5 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
 
 IMUFilterMadgwickPublisher::~IMUFilterMadgwickPublisher()
 {}
-
 
 } // namespace

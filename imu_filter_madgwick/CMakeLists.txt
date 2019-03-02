@@ -23,7 +23,8 @@ find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
 add_library(imu_filter_madgwick
-  src/imu_filter_madgwick.cpp)
+  src/imu_filter_madgwick.cpp
+  src/madgwickAHRS.cpp)
   
 target_include_directories(imu_filter_madgwick PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
