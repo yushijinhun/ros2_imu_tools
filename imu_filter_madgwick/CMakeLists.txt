@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(imu_filter_madgwick_node)
+project(imu_filter_madgwick)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -21,12 +21,12 @@ find_package(ament_cmake REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-add_executable(imu_filter_madgwick_node src/imu_filter_madgwick_node.cpp)
-target_include_directories(imu_filter_madgwick_node PUBLIC
+add_executable(imu_filter_madgwick src/imu_filter_madgwick_node.cpp)
+target_include_directories(imu_filter_madgwick PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-install(TARGETS imu_filter_madgwick_node
+install(TARGETS imu_filter_madgwick
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME})
 
