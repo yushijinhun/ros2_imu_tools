@@ -5,7 +5,10 @@ int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
 
+  auto node = std::make_shared<imu_filter_madgwick::IMUFilterMadgwickPublisher>();
+  rclcpp::spin(node);
+  rclcpp::shutdown();
+  node = nullptr;
 
-  printf("hello world imu_filter_madgwick package\n");
   return 0;
 }
