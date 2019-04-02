@@ -20,9 +20,14 @@ public:
 
 private:
 
-  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imuSub_;
+  using ImuData = sensor_msgs::msg::Imu;
+  using Marker = visualization_msgs::msg::Marker;
 
-  rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr markerPub_;
+  rclcpp::Subscription<ImuData>::SharedPtr imuSub_;
+
+  Marker markerMsg::sharedPtr;
+
+  rclcpp::Publisher<Marker>::SharedPtr markerPub_;
 
 };
 }  // namespace rviz_marker

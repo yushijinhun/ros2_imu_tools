@@ -8,28 +8,35 @@ RvizMarkerPublisher::RvizMarkerPublisher()
 
   markerPub_ = create_publisher<visualization_msgs::msg::Marker>("/visualization_msg/marker");
 
-  imuSub_ = create_subscription<sensor_msgs::msg::Imu>(
+  imuSub_ = create_subscription<ImuData>(
     "/imu/data",
-    [ = ](sensor_msgs::msg::Imu::SharedPtr imuMsg) {
+    [ & ](ImuData::SharedPtr imuMsg) {
 
-      visualization_msgs::msg::Marker::SharedPtr markerMsg;
-      markerMsg->header.frame_id = "base_link";
+      markerMsg.header.frame_id = "base_link";
       // markerMsg->header.stamp = ros_clock.now();
-      markerMsg->ns = "imu_visualization";
-      markerMsg->id = 0;
-      markerMsg->type = visualization_msgs::msg::Marker::ARROW;
-      markerMsg->action = visualization_msgs::msg::Marker::ADD;
+      markerMsg.ns = "imu_visualization";
+      markerMsg.id = 0;
+      markerMsg.type   = Marker::ARROW;
+      markerMsg.action = Marker::ADD;
 
-      markerMsg->pose.position.x = 1;
-      markerMsg->pose.position.y = 1;
-      markerMsg->pose.position.z = 1;
+      markerMsg.pose.position.x = 1;
+      markerMsg.pose.position.y = 1;
+      markerMsg.pose.position.z = 1;
 
-      markerMsg->pose.orientation.w = imuMsg.get()->orientation.w;
-      markerMsg->pose.orientation.x = imuMsg.get()->orientation.x;
-      markerMsg->pose.orientation.y = imuMsg.get()->orientation.y;
-      markerMsg->pose.orientation.z = imuMsg.get()->orientation.z;
+      markerMsg.pose.orientation.w = imuMsg.get()->orientation.w;
+      markerMsg.pose.orientation.x = imuMsg.get()->orientation.x;
+      markerMsg.pose.orientation.y = imuMsg.get()->orientation.y;
+      markerMsg.pose.orientation.z = imuMsg.get()->orientation.z;
 
-      markerPub_->publish(markerMsg.get());
+      markerMsg.scale.x = 1;
+      markerMsg.scale.y = 0.1;
+      markerMsg.scale.z = 0.1;
+      markerMsg.color.a = 1.0;
+      markerMsg.color.r = 0.9;
+      markerMsg.color.g = 0.0;
+      markerMsg.color.b = 0.1;
+
+      markerPub_->publish(markerMsg);
 
     });
 
