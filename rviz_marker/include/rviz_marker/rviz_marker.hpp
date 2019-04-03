@@ -25,7 +25,7 @@ private:
 
   rclcpp::Subscription<ImuData>::SharedPtr imuSub_;
 
-  Marker markerMsg::sharedPtr;
+  Marker markerMsg;
 
   rclcpp::Publisher<Marker>::SharedPtr markerPub_;
 
