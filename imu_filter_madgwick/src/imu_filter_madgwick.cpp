@@ -24,7 +24,7 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
       float dt = static_cast<float>((now() - lastUpdateTime_).seconds());
       lastUpdateTime_ = now();
 
-      filter.updateIMU(gx, gy, gz, ax, ay, az);
+      filter.updateIMU(gx, gy, gz, ax, ay, az, dt);
 
       imuRawMsg->orientation.w = filter.q0;
       imuRawMsg->orientation.x = filter.q1;
