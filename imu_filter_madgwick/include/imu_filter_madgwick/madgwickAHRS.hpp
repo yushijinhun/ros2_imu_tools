@@ -15,7 +15,6 @@ public:
 
 private:
 
-  const float sampleFreq = 512.0f;
   const float betaDef = 0.1f;
 
   float invSqrt(float x);
@@ -25,8 +24,8 @@ public:
   float beta;              // algorithm gain
   float q0, q1, q2, q3;    // quaternion of sensor frame relative to auxiliary frame
 
-  void update(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz);
-  void updateIMU(float gx, float gy, float gz, float ax, float ay, float az);
+  void update(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz, float dt);
+  void updateIMU(float gx, float gy, float gz, float ax, float ay, float az, float dt);
 
 };
 
