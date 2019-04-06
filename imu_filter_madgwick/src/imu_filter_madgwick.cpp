@@ -12,16 +12,16 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
     "/imu/data_raw",
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuRawMsg) {
 
-      float ax = imuRawMsg.get()->linear_acceleration.x;
-      float ay = imuRawMsg.get()->linear_acceleration.y;
-      float az = imuRawMsg.get()->linear_acceleration.z;
+      float ax = static_cast<float>(imuRawMsg.get()->linear_acceleration.x);
+      float ay = static_cast<float>(imuRawMsg.get()->linear_acceleration.y);
+      float az = static_cast<float>(imuRawMsg.get()->linear_acceleration.z);
 
-      float gx = imuRawMsg.get()->angular_velocity.x;
-      float gy = imuRawMsg.get()->angular_velocity.y;
-      float gz = imuRawMsg.get()->angular_velocity.z;
+      float gx = static_cast<float>(imuRawMsg.get()->angular_velocity.x);
+      float gy = static_cast<float>(imuRawMsg.get()->angular_velocity.y);
+      float gz = static_cast<float>(imuRawMsg.get()->angular_velocity.z);
 
       // TODO: auto time = imuRawMsg.get()->header.stamp;
-      float dt = (now() - lastUpdateTime_).seconds();
+      float dt = static_cast<float>((now() - lastUpdateTime_).seconds());
       lastUpdateTime_ = now();
 
       filter.updateIMU(gx, gy, gz, ax, ay, az);
