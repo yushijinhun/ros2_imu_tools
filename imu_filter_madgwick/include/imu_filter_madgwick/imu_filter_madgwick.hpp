@@ -21,6 +21,8 @@ private:
 
   MadgwickAHRS filter;
 
+  rclcpp::Time lastUpdateTime_;
+
   rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imuRawSub_;
 
   rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imuPub_;

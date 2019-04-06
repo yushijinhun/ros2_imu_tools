@@ -3,20 +3,26 @@
 namespace imu_filter_madgwick {
 
 IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
-  : rclcpp::Node{"imu_filter_madgwick_publisher"}
+  : rclcpp::Node{"imu_filter_madgwick_publisher"},
+  lastUpdateTime_(now())
 {
   imuPub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data");
 
   imuRawSub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuRawMsg) {
-      double ax = imuRawMsg.get()->linear_acceleration.x;
-      double ay = imuRawMsg.get()->linear_acceleration.y;
-      double az = imuRawMsg.get()->linear_acceleration.z;
 
-      double gx = imuRawMsg.get()->angular_velocity.x;
-      double gy = imuRawMsg.get()->angular_velocity.y;
-      double gz = imuRawMsg.get()->angular_velocity.z;
+      float ax = imuRawMsg.get()->linear_acceleration.x;
+      float ay = imuRawMsg.get()->linear_acceleration.y;
+      float az = imuRawMsg.get()->linear_acceleration.z;
+
+      float gx = imuRawMsg.get()->angular_velocity.x;
+      float gy = imuRawMsg.get()->angular_velocity.y;
+      float gz = imuRawMsg.get()->angular_velocity.z;
+
+      // TODO: auto time = imuRawMsg.get()->header.stamp;
+      float dt = (now() - lastUpdateTime_).seconds();
+      lastUpdateTime_ = now();
 
       filter.updateIMU(gx, gy, gz, ax, ay, az);
 
