@@ -25,7 +25,7 @@ find_package(visualization_msgs REQUIRED)
 
 add_library(rviz_marker
   src/rviz_marker.cpp)
-  
+
 target_include_directories(rviz_marker PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -35,7 +35,7 @@ ament_target_dependencies(rviz_marker
   "std_msgs"
   "sensor_msgs"
   "visualization_msgs")
-  
+
 target_compile_definitions(rviz_marker PRIVATE "RVIZ_MARKER_BUILDING_LIBRARY")
 
 install(
