@@ -49,6 +49,8 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
       imuRawMsg->orientation.y = d_orientation.getQuaternion().y();
       imuRawMsg->orientation.z = d_orientation.getQuaternion().z();
 
+      imuRawMsg->orientation_covariance.at(0) = 0;
+
       RCLCPP_DEBUG(get_logger(), "Received raw IMU message and publish IMU message");
       imuPub_->publish(imuRawMsg.get());
     });
