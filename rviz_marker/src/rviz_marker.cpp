@@ -13,7 +13,7 @@ RvizMarkerPublisher::RvizMarkerPublisher()
     [ & ](ImuData::SharedPtr imuMsg) {
 
       markerMsg.header.frame_id = "base_link";
-      // markerMsg->header.stamp = ros_clock.now();
+      markerMsg.header.stamp = now();
       markerMsg.ns = "imu_visualization";
       markerMsg.id = 0;
       markerMsg.type   = Marker::ARROW;
