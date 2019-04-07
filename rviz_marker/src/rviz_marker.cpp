@@ -14,30 +14,32 @@
 
 #include "rviz_marker/rviz_marker.hpp"
 
-namespace rviz_marker {
-
-RvizMarkerPublisher::RvizMarkerPublisher()
-  : rclcpp::Node{"rviz_marker_publisher"}
+namespace rviz_marker
 {
 
-  markerPub_ = create_publisher<visualization_msgs::msg::MarkerArray>("/visualization_msg/marker_array");
+RvizMarkerPublisher::RvizMarkerPublisher()
+: rclcpp::Node{"rviz_marker_publisher"}
+{
+
+  markerPub_ = create_publisher<visualization_msgs::msg::MarkerArray>(
+    "/visualization_msg/marker_array");
 
   //
   RCLCPP_INFO(get_logger(), "Setup axes marker");
 
   std::vector<std::string> axes = {"X", "Y", "Z"};
-  for(auto &name : axes) {
+  for (auto & name : axes) {
     Marker marker = baseAxisMarker(name);
     markerArrayMsg.markers.push_back(marker);
   }
 
   imuSub_ = create_subscription<ImuData>(
     "/imu/data",
-    [ & ](ImuData::SharedPtr imuMsg) {
+    [&](ImuData::SharedPtr imuMsg) {
 
       auto timeNow = now();
 
-      for (auto& marker : markerArrayMsg.markers) {
+      for (auto & marker : markerArrayMsg.markers) {
         marker.header.stamp = timeNow;
         marker.action = Marker::MODIFY;
         marker.pose.orientation = imuMsg.get()->orientation;
@@ -50,12 +52,13 @@ RvizMarkerPublisher::RvizMarkerPublisher()
 
 }
 
-RvizMarkerPublisher::~RvizMarkerPublisher() {
+RvizMarkerPublisher::~RvizMarkerPublisher()
+{
 
   RCLCPP_INFO(get_logger(), "Delete axes marker");
 
-  for (auto& marker : markerArrayMsg.markers) {
-    marker.action   = Marker::DELETE;
+  for (auto & marker : markerArrayMsg.markers) {
+    marker.action = Marker::DELETE;
     //TODO set duration
   }
 
@@ -63,7 +66,8 @@ RvizMarkerPublisher::~RvizMarkerPublisher() {
 
 }
 
-RvizMarkerPublisher::Marker RvizMarkerPublisher::baseAxisMarker(std::string axis_name) {
+RvizMarkerPublisher::Marker RvizMarkerPublisher::baseAxisMarker(std::string axis_name)
+{
 
   geometry_msgs::msg::Point origin;
   // origin.x = 0;

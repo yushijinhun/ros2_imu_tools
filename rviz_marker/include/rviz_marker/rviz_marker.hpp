@@ -33,7 +33,6 @@ public:
   virtual ~RvizMarkerPublisher();
 
 private:
-
   using ImuData = sensor_msgs::msg::Imu;
   using Marker = visualization_msgs::msg::Marker;
   using MarkerArray = visualization_msgs::msg::MarkerArray;
