@@ -6,7 +6,7 @@ RvizMarkerPublisher::RvizMarkerPublisher()
   : rclcpp::Node{"rviz_marker_publisher"}
 {
 
-  markerPub_ = create_publisher<visualization_msgs::msg::Marker>("/visualization_msg/marker");
+  markerPub_ = create_publisher<visualization_msgs::msg::MarkerArray>("/visualization_msg/marker_array");
 
   // start point for Axes
   origin.x = 0;
@@ -27,21 +27,27 @@ RvizMarkerPublisher::RvizMarkerPublisher()
   zTip.z = 1;
 
   // create z-Axis
-  zAxisMarker = axisMarker(zTip, 0, 0, 1);
+  xAxisMarker = axisMarker(xTip, 1, 0, 0);
+  yAxisMarker = axisMarker(yTip, 0, 1, 0);
+  //zAxisMarker = axisMarker(zTip, 0, 0, 1);
+
+  markerArrayMsg.markers.push_back(xAxisMarker);
+  markerArrayMsg.markers.push_back(yAxisMarker);
+  markerArrayMsg.markers.push_back(zAxisMarker);
 
   imuSub_ = create_subscription<ImuData>(
     "/imu/data",
     [ & ](ImuData::SharedPtr imuMsg) {
 
-      zAxisMarker.header.stamp = now();
-      zAxisMarker.action = Marker::MODIFY;
+      auto timeNow = now();
 
-      zAxisMarker.pose.orientation.w = imuMsg.get()->orientation.w;
-      zAxisMarker.pose.orientation.x = imuMsg.get()->orientation.x;
-      zAxisMarker.pose.orientation.y = imuMsg.get()->orientation.y;
-      zAxisMarker.pose.orientation.z = imuMsg.get()->orientation.z;
+      for (auto& marker : markerArrayMsg.markers) {
+        marker.header.stamp = timeNow;
+        marker.action = Marker::MODIFY;
+        marker.pose.orientation = imuMsg.get()->orientation;
+      }
 
-      markerPub_->publish(zAxisMarker);
+      markerPub_->publish(markerArrayMsg);
 
     });
 
