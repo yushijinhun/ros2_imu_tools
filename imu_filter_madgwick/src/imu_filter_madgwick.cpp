@@ -16,10 +16,12 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
   lastUpdateTime_(now())
 {
 
+  RCLCPP_INFO(get_logger(), "Initialise robot orientation");
   d_orientation.reset();
 
   imuPub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data");
 
+  RCLCPP_INFO(get_logger(), "Subscribe for /imu/data_raw");
   imuRawSub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuRawMsg) {
@@ -50,6 +52,7 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
       imuRawMsg->orientation.y = d_orientation.getQuaternion().y();
       imuRawMsg->orientation.z = d_orientation.getQuaternion().z();
 
+      RCLCPP_DEBUG(get_logger(), "Received raw IMU message and publish IMU message");
       imuPub_->publish(imuRawMsg.get());
     });
 
