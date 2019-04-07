@@ -11,7 +11,7 @@ RvizMarkerPublisher::RvizMarkerPublisher()
   // setup arrows of axes
   std::vector<std::string> axes = {"X", "Y", "Z"};
   for(auto &name : axes) {
-    Marker marker = axisMarker(name);
+    Marker marker = baseAxisMarker(name);
     markerArrayMsg.markers.push_back(marker);
   }
 
@@ -44,7 +44,7 @@ RvizMarkerPublisher::~RvizMarkerPublisher() {
 
 }
 
-RvizMarkerPublisher::Marker RvizMarkerPublisher::axisMarker(std::string axis_name) {
+RvizMarkerPublisher::Marker RvizMarkerPublisher::baseAxisMarker(std::string axis_name) {
 
   geometry_msgs::msg::Point origin;
   // origin.x = 0;

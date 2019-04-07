@@ -29,7 +29,7 @@ private:
   MarkerArray markerArrayMsg;
   rclcpp::Publisher<MarkerArray>::SharedPtr markerPub_;
 
-  Marker axisMarker(std::string axis_name);
+  Marker baseAxisMarker(std::string axis_name);
 
 };
 }  // namespace rviz_marker
