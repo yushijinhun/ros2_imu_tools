@@ -2,34 +2,53 @@
 
 namespace imu_filter_madgwick {
 
+// sampling period in seconds
+#define deltat 0.008
+
+// gyroscope measurement error in rad/s (shown as 5 deg/s)
+#define gyroMeasError 3.14159265358979f * (5.0f / 180.0f)
+
+// compute beta
+#define beta sqrt(3.0f / 4.0f) * gyroMeasError
+
 IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
   : rclcpp::Node{"imu_filter_madgwick_publisher"},
   lastUpdateTime_(now())
 {
+
+  d_orientation.reset();
+
   imuPub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data");
 
   imuRawSub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuRawMsg) {
 
-      float ax = static_cast<float>(imuRawMsg.get()->linear_acceleration.x);
-      float ay = static_cast<float>(imuRawMsg.get()->linear_acceleration.y);
-      float az = static_cast<float>(imuRawMsg.get()->linear_acceleration.z);
-
-      float gx = static_cast<float>(imuRawMsg.get()->angular_velocity.x);
-      float gy = static_cast<float>(imuRawMsg.get()->angular_velocity.y);
-      float gz = static_cast<float>(imuRawMsg.get()->angular_velocity.z);
-
       // TODO: auto time = imuRawMsg.get()->header.stamp;
       float dt = static_cast<float>((now() - lastUpdateTime_).seconds());
       lastUpdateTime_ = now();
 
-      filter.updateIMU(gx, gy, gz, ax, ay, az, dt);
+      Eigen::Matrix<double, 3, 1> const& referenceDirMes = Eigen::Matrix<double, 3, 1>{
+        imuRawMsg.get()->linear_acceleration.x,
+        imuRawMsg.get()->linear_acceleration.y,
+        imuRawMsg.get()->linear_acceleration.z
+      };
 
-      imuRawMsg->orientation.w = filter.q0;
-      imuRawMsg->orientation.x = filter.q1;
-      imuRawMsg->orientation.y = filter.q2;
-      imuRawMsg->orientation.z = filter.q3;
+      Eigen::Matrix<double, 3, 1> const& angularRate = Eigen::Matrix<double, 3, 1>{
+        imuRawMsg.get()->angular_velocity.x,
+        imuRawMsg.get()->angular_velocity.y,
+        imuRawMsg.get()->angular_velocity.z
+      };
+
+      //filter.updateIMU(gx, gy, gz, ax, ay, az, dt);
+      // d_orientation.integrate()
+      d_orientation.integrate(angularRate, dt, referenceDirMes, gyroMeasError);
+
+
+      imuRawMsg->orientation.w = d_orientation.getQuaternion().w();
+      imuRawMsg->orientation.x = d_orientation.getQuaternion().x();
+      imuRawMsg->orientation.y = d_orientation.getQuaternion().y();
+      imuRawMsg->orientation.z = d_orientation.getQuaternion().z();
 
       imuPub_->publish(imuRawMsg.get());
     });

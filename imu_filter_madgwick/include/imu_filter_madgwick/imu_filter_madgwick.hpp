@@ -5,7 +5,7 @@
 #include <sensor_msgs/msg/imu.hpp>
 #include <cmath>
 
-#include "imu_filter_madgwick/madgwickAHRS.hpp"
+#include "imu_filter_madgwick/orientation.hpp"
 
 namespace imu_filter_madgwick
 {
@@ -19,7 +19,7 @@ public:
 
 private:
 
-  MadgwickAHRS filter;
+  Orientation3d d_orientation;
 
   rclcpp::Time lastUpdateTime_;
 
