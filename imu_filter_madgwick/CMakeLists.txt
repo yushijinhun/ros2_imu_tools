@@ -26,7 +26,7 @@ find_package(Eigen3 REQUIRED)
 add_library(imu_filter_madgwick
   src/imu_filter_madgwick.cpp
   src/madgwickAHRS.cpp)
-  
+
 target_include_directories(imu_filter_madgwick PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
@@ -36,7 +36,7 @@ ament_target_dependencies(imu_filter_madgwick
   "rclcpp"
   "std_msgs"
   "sensor_msgs")
-  
+
 target_compile_definitions(imu_filter_madgwick PRIVATE "IMU_FILTER_MADGWICK_BUILDING_LIBRARY")
 
 install(

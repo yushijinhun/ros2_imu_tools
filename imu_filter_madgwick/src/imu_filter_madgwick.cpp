@@ -1,6 +1,21 @@
+// Copyright 2019 Bold Hearts
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include "imu_filter_madgwick/imu_filter_madgwick.hpp"
 
-namespace imu_filter_madgwick {
+namespace imu_filter_madgwick
+{
 
 // sampling period in seconds
 #define deltat 0.008
@@ -12,7 +27,7 @@ namespace imu_filter_madgwick {
 #define beta sqrt(3.0f / 4.0f) * gyroMeasError
 
 IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
-  : rclcpp::Node{"imu_filter_madgwick_publisher"},
+: rclcpp::Node{"imu_filter_madgwick_publisher"},
   lastUpdateTime_(now())
 {
 
@@ -54,9 +69,10 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
       RCLCPP_DEBUG(get_logger(), "Received raw IMU message and publish IMU message");
       imuPub_->publish(imuRawMsg.get());
     });
-
 }
 
-IMUFilterMadgwickPublisher::~IMUFilterMadgwickPublisher() {}
+IMUFilterMadgwickPublisher::~IMUFilterMadgwickPublisher()
+{}
 
-} // namespace
+
+}  // namespace imu_filter_madgwick
