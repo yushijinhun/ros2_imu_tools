@@ -45,13 +45,13 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
       float dt = static_cast<float>((now() - lastUpdateTime_).seconds());
       lastUpdateTime_ = now();
 
-      Eigen::Matrix<double, 3, 1> const& referenceDirMes = Eigen::Matrix<double, 3, 1>{
+      Eigen::Matrix<double, 3, 1> const & referenceDirMes = Eigen::Matrix<double, 3, 1>{
         imuRawMsg.get()->linear_acceleration.x,
         imuRawMsg.get()->linear_acceleration.y,
         imuRawMsg.get()->linear_acceleration.z
       };
 
-      Eigen::Matrix<double, 3, 1> const& angularRate = Eigen::Matrix<double, 3, 1>{
+      Eigen::Matrix<double, 3, 1> const & angularRate = Eigen::Matrix<double, 3, 1>{
         imuRawMsg.get()->angular_velocity.x,
         imuRawMsg.get()->angular_velocity.y,
         imuRawMsg.get()->angular_velocity.z

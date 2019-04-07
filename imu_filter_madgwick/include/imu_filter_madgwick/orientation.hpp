@@ -12,11 +12,11 @@ class Orientation<T, 3>
 {
 public:
   Orientation()
-    : d_quaternion{Eigen::Quaternion<T>::Identity()}
+  : d_quaternion{Eigen::Quaternion<T>::Identity()}
   {
   }
 
-  Eigen::Quaternion<T> const& getQuaternion() const
+  Eigen::Quaternion<T> const & getQuaternion() const
   {
     return d_quaternion;
   }
@@ -29,7 +29,7 @@ public:
    * @param angularRate Measured angular rate around axes, in rad/sec, e.g. from gyroscope
    * @param interval Time interval to integrate over, in secons
    */
-  void integrate(Eigen::Matrix<T, 3, 1> const& angularRate, T interval);
+  void integrate(Eigen::Matrix<T, 3, 1> const & angularRate, T interval);
 
   /** Integrate measurement of angular rate, corrected given a reference measurement
    *
@@ -39,10 +39,11 @@ public:
    * @param maxGyroError Maximum gyroscope measurement error, in rad/sec. Used to determine correction weight
    * @param referenceDir Reference direction that is measured in global reference frame. By default direction of gravity
    */
-  void integrate(Eigen::Matrix<T, 3, 1> const& angularRate, T interval,
-                 Eigen::Matrix<T, 3, 1> const& referenceDirMeas,
-                 T maxGyroError,
-                 Eigen::Matrix<T, 3, 1> const& referenceDir = Eigen::Matrix<T, 3, 1>{0, 0, 1});
+  void integrate(
+    Eigen::Matrix<T, 3, 1> const & angularRate, T interval,
+    Eigen::Matrix<T, 3, 1> const & referenceDirMeas,
+    T maxGyroError,
+    Eigen::Matrix<T, 3, 1> const & referenceDir = Eigen::Matrix<T, 3, 1>{0, 0, 1});
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 private:
@@ -50,7 +51,6 @@ private:
 };
 
 using Orientation3d = Orientation<double, 3>;
-
 
 
 template<typename T>
@@ -66,12 +66,13 @@ void Orientation<T, 3>::reset(Eigen::Quaternion<T> quat)
 }
 
 template<typename T>
-void Orientation<T, 3>::integrate(const Eigen::Matrix<T, 3, 1> &angularRate, T interval)
+void Orientation<T, 3>::integrate(const Eigen::Matrix<T, 3, 1> & angularRate, T interval)
 {
   auto theta = angularRate * interval / 2;
   auto thetaMag = theta.norm();
-  if (thetaMag == 0)
+  if (thetaMag == 0) {
     return;
+  }
 
   auto deltaQuat = Eigen::Quaternion<T>{};
   deltaQuat.w() = cos(thetaMag);
@@ -82,10 +83,11 @@ void Orientation<T, 3>::integrate(const Eigen::Matrix<T, 3, 1> &angularRate, T i
 }
 
 template<typename T>
-void Orientation<T, 3>::integrate(Eigen::Matrix<T, 3, 1> const& angularRate, T interval,
-                                  Eigen::Matrix<T, 3, 1> const& referenceDirLocalMeas,
-                                  T maxGyroError,
-                                  Eigen::Matrix<T, 3, 1> const& referenceDirGlobal)
+void Orientation<T, 3>::integrate(
+  Eigen::Matrix<T, 3, 1> const & angularRate, T interval,
+  Eigen::Matrix<T, 3, 1> const & referenceDirLocalMeas,
+  T maxGyroError,
+  Eigen::Matrix<T, 3, 1> const & referenceDirGlobal)
 {
   integrate(angularRate, interval);
 
@@ -106,16 +108,17 @@ void Orientation<T, 3>::integrate(Eigen::Matrix<T, 3, 1> const& angularRate, T i
 
   auto jacobian =
     (Eigen::Matrix<T, 3, 4>() <<
-     2 * q4  , -2 * q1 , 2 * q2 , -2 * q3,
-     2 * q1  , 2 * q4  , 2 * q3 , 2 * q2,
-     -4 * q2 , -4 * q3 , 0.0    , 0.0   ).
+    2 * q4, -2 * q1, 2 * q2, -2 * q3,
+    2 * q1, 2 * q4, 2 * q3, 2 * q2,
+    -4 * q2, -4 * q3, 0.0, 0.0   ).
     finished();
 
   Eigen::Vector4d normalizedObjectiveFunctionGradient =
     jacobian.transpose() * objectiveFunction;
 
-  if (normalizedObjectiveFunctionGradient.squaredNorm() > 1e-16)
+  if (normalizedObjectiveFunctionGradient.squaredNorm() > 1e-16) {
     normalizedObjectiveFunctionGradient.normalize();
+  }
 
   d_quaternion.coeffs() -= beta * normalizedObjectiveFunctionGradient * interval;
   d_quaternion.normalize();
