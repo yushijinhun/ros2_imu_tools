@@ -42,10 +42,7 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
         imuRawMsg.get()->angular_velocity.z
       };
 
-      //filter.updateIMU(gx, gy, gz, ax, ay, az, dt);
-      // d_orientation.integrate()
       d_orientation.integrate(angularRate, dt, referenceDirMes, gyroMeasError);
-
 
       imuRawMsg->orientation.w = d_orientation.getQuaternion().w();
       imuRawMsg->orientation.x = d_orientation.getQuaternion().x();
@@ -56,10 +53,8 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
       imuPub_->publish(imuRawMsg.get());
     });
 
-  // something
 }
 
-IMUFilterMadgwickPublisher::~IMUFilterMadgwickPublisher()
-{}
+IMUFilterMadgwickPublisher::~IMUFilterMadgwickPublisher() {}
 
 } // namespace
