@@ -33,7 +33,16 @@ RvizMarkerPublisher::RvizMarkerPublisher()
 
 }
 
-RvizMarkerPublisher::~RvizMarkerPublisher() {}
+RvizMarkerPublisher::~RvizMarkerPublisher() {
+
+  for (auto& marker : markerArrayMsg.markers) {
+    marker.action   = Marker::DELETE;
+    //TODO set duration
+  }
+
+  markerPub_->publish(markerArrayMsg);
+
+}
 
 RvizMarkerPublisher::Marker RvizMarkerPublisher::axisMarker(std::string axis_name) {
 
