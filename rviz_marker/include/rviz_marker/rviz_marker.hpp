@@ -27,6 +27,16 @@ private:
 
   Marker markerMsg;
 
+  geometry_msgs::msg::Point origin;
+  geometry_msgs::msg::Point xTip;
+  geometry_msgs::msg::Point yTip;
+  geometry_msgs::msg::Point zTip;
+
+  Marker zAxisMarker;
+
+  Marker axisMarker(const geometry_msgs::msg::Point& tip, const double& r, const double& g, const double& b);
+
+
   rclcpp::Publisher<Marker>::SharedPtr markerPub_;
 
 };

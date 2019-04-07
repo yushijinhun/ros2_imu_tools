@@ -8,40 +8,72 @@ RvizMarkerPublisher::RvizMarkerPublisher()
 
   markerPub_ = create_publisher<visualization_msgs::msg::Marker>("/visualization_msg/marker");
 
+  // start point for Axes
+  origin.x = 0;
+  origin.y = 0;
+  origin.z = 0;
+
+  // end points for Axes
+  xTip.x = 1;
+  xTip.y = 0;
+  xTip.z = 0;
+
+  yTip.x = 0;
+  yTip.y = 1;
+  yTip.z = 0;
+
+  zTip.x = 0;
+  zTip.y = 0;
+  zTip.z = 1;
+
+  // create z-Axis
+  zAxisMarker = axisMarker(zTip, 0, 0, 1);
+
   imuSub_ = create_subscription<ImuData>(
     "/imu/data",
     [ & ](ImuData::SharedPtr imuMsg) {
 
-      markerMsg.header.frame_id = "base_link";
-      markerMsg.header.stamp = now();
-      markerMsg.ns = "imu_visualization";
-      markerMsg.id = 0;
-      markerMsg.type   = Marker::ARROW;
-      markerMsg.action = Marker::ADD;
+      zAxisMarker.header.stamp = now();
+      zAxisMarker.action = Marker::MODIFY;
 
-      markerMsg.pose.position.x = 0;
-      markerMsg.pose.position.y = 0;
-      markerMsg.pose.position.z = 0;
+      zAxisMarker.pose.orientation.w = imuMsg.get()->orientation.w;
+      zAxisMarker.pose.orientation.x = imuMsg.get()->orientation.x;
+      zAxisMarker.pose.orientation.y = imuMsg.get()->orientation.y;
+      zAxisMarker.pose.orientation.z = imuMsg.get()->orientation.z;
 
-      markerMsg.pose.orientation.w = imuMsg.get()->orientation.w;
-      markerMsg.pose.orientation.x = imuMsg.get()->orientation.x;
-      markerMsg.pose.orientation.y = imuMsg.get()->orientation.y;
-      markerMsg.pose.orientation.z = imuMsg.get()->orientation.z;
-
-      markerMsg.scale.x = 1;
-      markerMsg.scale.y = 0.1;
-      markerMsg.scale.z = 0.1;
-      markerMsg.color.a = 1.0;
-      markerMsg.color.r = 0.9;
-      markerMsg.color.g = 0.0;
-      markerMsg.color.b = 0.1;
-
-      markerPub_->publish(markerMsg);
+      markerPub_->publish(zAxisMarker);
 
     });
 
 }
 
 RvizMarkerPublisher::~RvizMarkerPublisher() {}
+
+visualization_msgs::msg::Marker RvizMarkerPublisher::axisMarker(const geometry_msgs::msg::Point& tip, const double& r, const double& g, const double& b) {
+
+  visualization_msgs::msg::Marker axisMarker;
+
+  axisMarker.header.frame_id = "base_link";
+  axisMarker.header.stamp = now();
+  axisMarker.id = 0;
+  axisMarker.ns = "imu_visualization";
+  axisMarker.type = Marker::ARROW;
+  axisMarker.action = Marker::ADD;
+
+  axisMarker.points.push_back(origin);
+  axisMarker.points.push_back(tip);
+
+  axisMarker.scale.x = 0.1; // shaft diameter
+  axisMarker.scale.y = 0.2; // head diameter
+  // axisMarker.scale.z = 0.1; // head length
+
+  // XYZ -> RGB
+  axisMarker.color.r = r;
+  axisMarker.color.g = g;
+  axisMarker.color.b = b;
+  axisMarker.color.a = 1;
+
+  return axisMarker;
+}
 
 } // namespace
