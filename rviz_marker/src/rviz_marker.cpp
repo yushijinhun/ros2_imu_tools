@@ -8,7 +8,9 @@ RvizMarkerPublisher::RvizMarkerPublisher()
 
   markerPub_ = create_publisher<visualization_msgs::msg::MarkerArray>("/visualization_msg/marker_array");
 
-  // setup arrows of axes
+  //
+  RCLCPP_INFO(get_logger(), "Setup axes marker");
+
   std::vector<std::string> axes = {"X", "Y", "Z"};
   for(auto &name : axes) {
     Marker marker = baseAxisMarker(name);
@@ -27,6 +29,7 @@ RvizMarkerPublisher::RvizMarkerPublisher()
         marker.pose.orientation = imuMsg.get()->orientation;
       }
 
+      RCLCPP_DEBUG(get_logger(), "Publish new message of MarkerArray");
       markerPub_->publish(markerArrayMsg);
 
     });
@@ -34,6 +37,8 @@ RvizMarkerPublisher::RvizMarkerPublisher()
 }
 
 RvizMarkerPublisher::~RvizMarkerPublisher() {
+
+  RCLCPP_INFO(get_logger(), "Delete axes marker");
 
   for (auto& marker : markerArrayMsg.markers) {
     marker.action   = Marker::DELETE;
