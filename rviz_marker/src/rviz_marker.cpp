@@ -19,9 +19,9 @@ RvizMarkerPublisher::RvizMarkerPublisher()
       markerMsg.type   = Marker::ARROW;
       markerMsg.action = Marker::ADD;
 
-      markerMsg.pose.position.x = 1;
-      markerMsg.pose.position.y = 1;
-      markerMsg.pose.position.z = 1;
+      markerMsg.pose.position.x = 0;
+      markerMsg.pose.position.y = 0;
+      markerMsg.pose.position.z = 0;
 
       markerMsg.pose.orientation.w = imuMsg.get()->orientation.w;
       markerMsg.pose.orientation.x = imuMsg.get()->orientation.x;
@@ -42,7 +42,6 @@ RvizMarkerPublisher::RvizMarkerPublisher()
 
 }
 
-RvizMarkerPublisher::~RvizMarkerPublisher()
-{}
+RvizMarkerPublisher::~RvizMarkerPublisher() {}
 
 } // namespace
