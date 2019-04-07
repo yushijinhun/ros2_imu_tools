@@ -8,32 +8,12 @@ RvizMarkerPublisher::RvizMarkerPublisher()
 
   markerPub_ = create_publisher<visualization_msgs::msg::MarkerArray>("/visualization_msg/marker_array");
 
-  // start point for Axes
-  origin.x = 0;
-  origin.y = 0;
-  origin.z = 0;
-
-  // end points for Axes
-  xTip.x = 1;
-  xTip.y = 0;
-  xTip.z = 0;
-
-  yTip.x = 0;
-  yTip.y = 1;
-  yTip.z = 0;
-
-  zTip.x = 0;
-  zTip.y = 0;
-  zTip.z = 1;
-
-  // create z-Axis
-  xAxisMarker = axisMarker(xTip, 1, 0, 0);
-  yAxisMarker = axisMarker(yTip, 0, 1, 0);
-  //zAxisMarker = axisMarker(zTip, 0, 0, 1);
-
-  markerArrayMsg.markers.push_back(xAxisMarker);
-  markerArrayMsg.markers.push_back(yAxisMarker);
-  markerArrayMsg.markers.push_back(zAxisMarker);
+  // setup arrows of axes
+  std::vector<std::string> axes = {"X", "Y", "Z"};
+  for(auto &name : axes) {
+    Marker marker = axisMarker(name);
+    markerArrayMsg.markers.push_back(marker);
+  }
 
   imuSub_ = create_subscription<ImuData>(
     "/imu/data",
@@ -55,29 +35,44 @@ RvizMarkerPublisher::RvizMarkerPublisher()
 
 RvizMarkerPublisher::~RvizMarkerPublisher() {}
 
-visualization_msgs::msg::Marker RvizMarkerPublisher::axisMarker(const geometry_msgs::msg::Point& tip, const double& r, const double& g, const double& b) {
+RvizMarkerPublisher::Marker RvizMarkerPublisher::axisMarker(std::string axis_name) {
+
+  geometry_msgs::msg::Point origin;
+  // origin.x = 0;
+  // origin.y = 0;
+  // origin.z = 0;
 
   visualization_msgs::msg::Marker axisMarker;
 
   axisMarker.header.frame_id = "base_link";
   axisMarker.header.stamp = now();
   axisMarker.id = 0;
-  axisMarker.ns = "imu_visualization";
+  axisMarker.ns = "imu_visualization/" + axis_name;
   axisMarker.type = Marker::ARROW;
   axisMarker.action = Marker::ADD;
-
-  axisMarker.points.push_back(origin);
-  axisMarker.points.push_back(tip);
 
   axisMarker.scale.x = 0.1; // shaft diameter
   axisMarker.scale.y = 0.2; // head diameter
   // axisMarker.scale.z = 0.1; // head length
 
-  // XYZ -> RGB
-  axisMarker.color.r = r;
-  axisMarker.color.g = g;
-  axisMarker.color.b = b;
+  // set start/end point to origin
+  axisMarker.points.push_back(origin);
+  axisMarker.points.push_back(origin);
+
   axisMarker.color.a = 1;
+
+  // change color: XYZ -> RGB
+  // change endpoint
+  if (axis_name == "X") {
+    axisMarker.color.r = 1;
+    axisMarker.points.at(1).x = 1;
+  } else if (axis_name == "Y") {
+    axisMarker.color.g = 1;
+    axisMarker.points.at(1).y = 1;
+  } else if (axis_name == "Z") {
+    axisMarker.color.b = 1;
+    axisMarker.points.at(1).z = 1;
+  }
 
   return axisMarker;
 }

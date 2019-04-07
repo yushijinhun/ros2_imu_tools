@@ -3,7 +3,6 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
-#include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 #include <cmath>
 
@@ -27,21 +26,10 @@ private:
 
   rclcpp::Subscription<ImuData>::SharedPtr imuSub_;
 
-  visualization_msgs::msg::MarkerArray markerArrayMsg;
-
-  geometry_msgs::msg::Point origin;
-  geometry_msgs::msg::Point xTip;
-  geometry_msgs::msg::Point yTip;
-  geometry_msgs::msg::Point zTip;
-
-  Marker xAxisMarker;
-  Marker yAxisMarker;
-  Marker zAxisMarker;
-
-  Marker axisMarker(const geometry_msgs::msg::Point& tip, const double& r, const double& g, const double& b);
-
-
+  MarkerArray markerArrayMsg;
   rclcpp::Publisher<MarkerArray>::SharedPtr markerPub_;
+
+  Marker axisMarker(std::string axis_name);
 
 };
 }  // namespace rviz_marker
