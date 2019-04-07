@@ -15,12 +15,13 @@
 #ifndef RVIZ_MARKER__RVIZ_MARKER_HPP_
 #define RVIZ_MARKER__RVIZ_MARKER_HPP_
 
-#include <rclcpp/rclcpp.hpp>
+#include "rviz_marker/rviz_marker.hpp"
+
 #include <sensor_msgs/msg/imu.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
-#include <cmath>
+#include <rclcpp/rclcpp.hpp>
 
-#include "rviz_marker/rviz_marker.hpp"
+#include <string>
 
 namespace rviz_marker
 {
@@ -43,7 +44,6 @@ private:
   rclcpp::Publisher<MarkerArray>::SharedPtr markerPub_;
 
   Marker baseAxisMarker(std::string axis_name);
-
 };
 }  // namespace rviz_marker
 

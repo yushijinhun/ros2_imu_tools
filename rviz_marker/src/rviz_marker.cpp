@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <string>
+#include <vector>
+
 #include "rviz_marker/rviz_marker.hpp"
 
 namespace rviz_marker
@@ -20,7 +23,6 @@ namespace rviz_marker
 RvizMarkerPublisher::RvizMarkerPublisher()
 : rclcpp::Node{"rviz_marker_publisher"}
 {
-
   markerPub_ = create_publisher<visualization_msgs::msg::MarkerArray>(
     "/visualization_msg/marker_array");
 
@@ -36,7 +38,6 @@ RvizMarkerPublisher::RvizMarkerPublisher()
   imuSub_ = create_subscription<ImuData>(
     "/imu/data",
     [&](ImuData::SharedPtr imuMsg) {
-
       auto timeNow = now();
 
       for (auto & marker : markerArrayMsg.markers) {
@@ -47,28 +48,23 @@ RvizMarkerPublisher::RvizMarkerPublisher()
 
       RCLCPP_DEBUG(get_logger(), "Publish new message of MarkerArray");
       markerPub_->publish(markerArrayMsg);
-
     });
-
 }
 
 RvizMarkerPublisher::~RvizMarkerPublisher()
 {
-
   RCLCPP_INFO(get_logger(), "Delete axes marker");
 
   for (auto & marker : markerArrayMsg.markers) {
     marker.action = Marker::DELETE;
-    //TODO set duration
+    // TODO(marcus) set duration
   }
 
   markerPub_->publish(markerArrayMsg);
-
 }
 
 RvizMarkerPublisher::Marker RvizMarkerPublisher::baseAxisMarker(std::string axis_name)
 {
-
   geometry_msgs::msg::Point origin;
   // origin.x = 0;
   // origin.y = 0;
@@ -83,8 +79,8 @@ RvizMarkerPublisher::Marker RvizMarkerPublisher::baseAxisMarker(std::string axis
   axisMarker.type = Marker::ARROW;
   axisMarker.action = Marker::ADD;
 
-  axisMarker.scale.x = 0.1; // shaft diameter
-  axisMarker.scale.y = 0.2; // head diameter
+  axisMarker.scale.x = 0.1;  // shaft diameter
+  axisMarker.scale.y = 0.2;  // head diameter
   // axisMarker.scale.z = 0.1; // head length
 
   // set start/end point to origin
@@ -109,4 +105,4 @@ RvizMarkerPublisher::Marker RvizMarkerPublisher::baseAxisMarker(std::string axis
   return axisMarker;
 }
 
-} // namespace
+}  // namespace rviz_marker
