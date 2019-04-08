@@ -21,7 +21,10 @@ find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+
 find_package(Eigen3 REQUIRED)
+set(Eigen_INCLUDE_DIR "${EIGEN3_INCLUDE_DIR}")
+message(STATUS "Using Eigen3 include dirs: ${Eigen_INCLUDE_DIR}")
 
 add_library(imu_filter_madgwick
   src/imu_filter_madgwick.cpp)
@@ -29,7 +32,7 @@ add_library(imu_filter_madgwick
 target_include_directories(imu_filter_madgwick PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${EIGEN3_INCLUDE_DIR})
+  ${Eigen_INCLUDE_DIR})
 
 ament_target_dependencies(imu_filter_madgwick
   "rclcpp"
