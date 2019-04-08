@@ -1,5 +1,19 @@
-#ifndef ORIENTATION__ORIENTATION_HPP_
-#define ORIENTATION__ORIENTATION_HPP_
+// Copyright 2019 Bold Hearts
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#ifndef IMU_FILTER_MADGWICK__ORIENTATION_HPP_
+#define IMU_FILTER_MADGWICK__ORIENTATION_HPP_
 
 #include <Eigen/Geometry>
 #include <iostream>
@@ -94,7 +108,8 @@ void Orientation<T, 3>::integrate(
   T constexpr sqrt34 = std::sqrt(0.75);
   auto beta = sqrt34 * maxGyroError;
 
-  // The objective function is the difference between expected and measured reference dir in local frame
+  // The objective function is the difference between
+  // expected and measured reference dir in local frame
   // The quaternion describes the orientation of the local frame in the global frame,
   // so a vector multiplied with it is transformed from local to global
 
@@ -124,4 +139,4 @@ void Orientation<T, 3>::integrate(
   d_quaternion.normalize();
 }
 
-#endif // ORIENTATION__ORIENTATION_HPP_
+#endif  // IMU_FILTER_MADGWICK__ORIENTATION_HPP_

@@ -13,7 +13,9 @@
 // limitations under the License.
 
 #include "imu_filter_madgwick/imu_filter_madgwick.hpp"
+
 #include <cstdio>
+#include <memory>
 
 int main(int argc, char ** argv)
 {

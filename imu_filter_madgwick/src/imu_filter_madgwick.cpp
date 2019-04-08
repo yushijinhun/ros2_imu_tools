@@ -30,7 +30,6 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
 : rclcpp::Node{"imu_filter_madgwick_publisher"},
   lastUpdateTime_(now())
 {
-
   RCLCPP_INFO(get_logger(), "Initialise robot orientation");
   d_orientation.reset();
 
@@ -40,8 +39,7 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
   imuRawSub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuRawMsg) {
-
-      // TODO: auto time = imuRawMsg.get()->header.stamp;
+      // TODO(scheunemann) auto time = imuRawMsg.get()->header.stamp;
       float dt = static_cast<float>((now() - lastUpdateTime_).seconds());
       lastUpdateTime_ = now();
 
