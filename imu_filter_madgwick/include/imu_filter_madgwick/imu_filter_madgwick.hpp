@@ -33,6 +33,9 @@ public:
 private:
   Orientation3d d_orientation;
 
+  bool use_fixed_dt;
+  double dt;
+  float gyroMeasError;
   rclcpp::Time lastUpdateTime_;
 
   rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imuRawSub_;

@@ -17,19 +17,21 @@
 namespace imu_filter_madgwick
 {
 
-// sampling period in seconds
-#define deltat 0.008
-
-// gyroscope measurement error in rad/s (shown as 5 deg/s)
-#define gyroMeasError 3.14159265358979f * (5.0f / 180.0f)
-
-// compute beta
-#define beta sqrt(3.0f / 4.0f) * gyroMeasError
-
 IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
 : rclcpp::Node{"imu_filter_madgwick_publisher"},
   lastUpdateTime_(now())
 {
+  get_parameter_or_set("gyroMeasError", gyroMeasError, 3.14159265358979f * (5.0f / 180.0f));
+
+  // gain is unused
+  // float beta;
+  // get_parameter_or_set("gyroMeasError", beta, sqrt(3.0f / 4.0f) * gyroMeasError);
+
+  // static sampling periodin seconds
+  get_parameter_or_set("use_fixed_dt", use_fixed_dt, false);
+  get_parameter_or_set("fixed_dt", dt, 0.008);
+
+
   RCLCPP_INFO(get_logger(), "Initialise robot orientation");
   d_orientation.reset();
 
@@ -39,9 +41,11 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
   imuRawSub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuRawMsg) {
-      // TODO(scheunemann) auto time = imuRawMsg.get()->header.stamp;
-      float dt = static_cast<float>((now() - lastUpdateTime_).seconds());
-      lastUpdateTime_ = now();
+      if (!use_fixed_dt) {
+        // TODO(scheunemann) auto time = imuRawMsg.get()->header.stamp;
+        dt = (now() - lastUpdateTime_).seconds();
+        lastUpdateTime_ = now();
+      }
 
       Eigen::Matrix<double, 3, 1> const & referenceDirMes = Eigen::Matrix<double, 3, 1>{
         imuRawMsg.get()->linear_acceleration.x,
