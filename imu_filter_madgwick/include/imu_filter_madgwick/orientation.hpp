@@ -11,6 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
+// The integration step uses a technique from paper:
+//
+//   "An efficient orientation filter for inertial and inertial/magnetic sensor arrays"
+//
+//   Sebastian O.H. Madgwick, April 30, 2010
 
 #ifndef IMU_FILTER_MADGWICK__ORIENTATION_HPP_
 #define IMU_FILTER_MADGWICK__ORIENTATION_HPP_
