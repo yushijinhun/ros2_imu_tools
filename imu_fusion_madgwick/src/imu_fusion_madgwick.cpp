@@ -43,7 +43,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
     "/imu/data_raw",
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuRawMsg) {
       if (!use_fixed_dt) {
-        // TODO(scheunemann) auto time = imuRawMsg.get()->header.stamp;
+        // TODO(scheunemann) auto time = imuRawMsg->header.stamp;
         dt = (now() - lastUpdateTime_).seconds();
         lastUpdateTime_ = now();
       }
@@ -51,13 +51,14 @@ IMUFusionMadgwick::IMUFusionMadgwick()
       //
       integrate(imuRawMsg->angular_velocity, dt, imuRawMsg->linear_acceleration, gyroMeasError);
 
+      // set new orientation
       imuRawMsg->orientation = getQuaternion();
 
       // make message valid
       imuRawMsg->orientation_covariance.at(0) = 0;
 
       RCLCPP_DEBUG(get_logger(), "Received raw IMU message and publish IMU message");
-      imuPub_->publish(imuRawMsg.get());
+      imuPub_->publish(imuRawMsg);
     });
 }
 
