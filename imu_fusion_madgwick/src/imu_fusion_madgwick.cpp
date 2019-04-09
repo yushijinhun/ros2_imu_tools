@@ -18,7 +18,7 @@ namespace imu_fusion_madgwick
 {
 
 IMUFusionMadgwick::IMUFusionMadgwick()
-: rclcpp::Node{"imu_filter_madgwick_publisher"},
+: rclcpp::Node{"imu_fusion_madgwick"},
   d_quaternion{Eigen::Quaternion<double>::Identity()},
   lastUpdateTime_(now())
 {
