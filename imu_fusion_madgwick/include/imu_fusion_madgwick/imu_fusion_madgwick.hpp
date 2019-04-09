@@ -33,7 +33,6 @@ public:
   virtual ~IMUFusionMadgwick();
 
 private:
-
   using Imu = sensor_msgs::msg::Imu;
   using Quaternion = geometry_msgs::msg::Quaternion;
 
@@ -53,6 +52,12 @@ private:
   void reset();
   void reset(const Quaternion & quat);
   void reset(Eigen::Quaternion<double> quat);
+
+
+  void integrate(
+    geometry_msgs::msg::Vector3 const & angularRate, double interval,
+    geometry_msgs::msg::Vector3 const & referenceDirMeas,
+    double maxGyroError);
 
   /** Integrate measurement of angular rate
    *
@@ -75,7 +80,6 @@ private:
     double maxGyroError,
     Eigen::Matrix<double, 3, 1> const & referenceDir = Eigen::Matrix<double, 3, 1>{0, 0, 1});
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
 };
 
 }  // namespace imu_fusion_madgwick

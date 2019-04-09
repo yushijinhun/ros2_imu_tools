@@ -19,8 +19,8 @@ namespace imu_fusion_madgwick
 
 IMUFusionMadgwick::IMUFusionMadgwick()
 : rclcpp::Node{"imu_fusion_madgwick"},
-  d_quaternion{Eigen::Quaternion<double>::Identity()},
-  lastUpdateTime_(now())
+  lastUpdateTime_(now()),
+  d_quaternion{Eigen::Quaternion<double>::Identity()}
 {
   get_parameter_or_set("gyroMeasError", gyroMeasError, 3.14159265358979f * (5.0f / 180.0f));
 
@@ -48,19 +48,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
         lastUpdateTime_ = now();
       }
 
-      Eigen::Matrix<double, 3, 1> const & referenceDirMes = Eigen::Matrix<double, 3, 1>{
-        imuRawMsg.get()->linear_acceleration.x,
-        imuRawMsg.get()->linear_acceleration.y,
-        imuRawMsg.get()->linear_acceleration.z
-      };
-
-      Eigen::Matrix<double, 3, 1> const & angularRate = Eigen::Matrix<double, 3, 1>{
-        imuRawMsg.get()->angular_velocity.x,
-        imuRawMsg.get()->angular_velocity.y,
-        imuRawMsg.get()->angular_velocity.z
-      };
-
-      integrate(angularRate, dt, referenceDirMes, gyroMeasError);
+      integrate(imuRawMsg->angular_velocity, dt, imuRawMsg->linear_acceleration, gyroMeasError);
 
       imuRawMsg->orientation = getQuaternion();
 
@@ -102,6 +90,22 @@ void IMUFusionMadgwick::reset(const Quaternion & quaternion)
 void IMUFusionMadgwick::reset(Eigen::Quaternion<double> quat)
 {
   d_quaternion = quat;
+}
+
+void IMUFusionMadgwick::integrate(
+  geometry_msgs::msg::Vector3 const & angular_velocity, double interval,
+  geometry_msgs::msg::Vector3 const & linear_acceleration,
+  double maxGyroError)
+{
+  auto referenceDirMes = Eigen::Vector3d{
+    linear_acceleration.x, linear_acceleration.y, linear_acceleration.z
+  };
+
+  auto angularRate = Eigen::Vector3d{
+    angular_velocity.x, angular_velocity.y, angular_velocity.z
+  };
+
+  integrate(angularRate, interval, referenceDirMes, maxGyroError);
 }
 
 void IMUFusionMadgwick::integrate(const Eigen::Matrix<double, 3, 1> & angularRate, double interval)
