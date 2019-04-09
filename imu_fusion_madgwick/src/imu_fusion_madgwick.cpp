@@ -20,7 +20,7 @@ namespace imu_fusion_madgwick
 IMUFusionMadgwick::IMUFusionMadgwick()
 : rclcpp::Node{"imu_fusion_madgwick"},
   lastUpdateTime_(now()),
-  d_quaternion{Eigen::Quaternion<double>::Identity()}
+  d_quaternion{Eigen::Quaterniond::Identity()}
 {
   get_parameter_or_set("gyroMeasError", gyroMeasError, 3.14159265358979f * (5.0f / 180.0f));
 
@@ -79,7 +79,7 @@ geometry_msgs::msg::Quaternion IMUFusionMadgwick::getQuaternion() const
 
 void IMUFusionMadgwick::reset()
 {
-  d_quaternion = Eigen::Quaternion<double>::Identity();
+  d_quaternion = Eigen::Quaterniond::Identity();
 }
 
 void IMUFusionMadgwick::reset(const Quaternion & quaternion)
@@ -111,7 +111,7 @@ void IMUFusionMadgwick::integrate(
   integrate(angularRate, interval, referenceDirMes, maxGyroError);
 }
 
-void IMUFusionMadgwick::integrate(const Eigen::Matrix<double, 3, 1> & angularRate, double interval)
+void IMUFusionMadgwick::integrate(const Eigen::Vector3d & angularRate, double interval)
 {
   auto theta = angularRate * interval / 2;
   auto thetaMag = theta.norm();
@@ -119,7 +119,7 @@ void IMUFusionMadgwick::integrate(const Eigen::Matrix<double, 3, 1> & angularRat
     return;
   }
 
-  auto deltaQuat = Eigen::Quaternion<double>{};
+  auto deltaQuat = Eigen::Quaterniond{};
   deltaQuat.w() = cos(thetaMag);
   deltaQuat.vec() = sin(thetaMag) / thetaMag * theta;
 
@@ -128,10 +128,10 @@ void IMUFusionMadgwick::integrate(const Eigen::Matrix<double, 3, 1> & angularRat
 }
 
 void IMUFusionMadgwick::integrate(
-  Eigen::Matrix<double, 3, 1> const & angularRate, double interval,
-  Eigen::Matrix<double, 3, 1> const & referenceDirLocalMeas,
+  Eigen::Vector3d const & angularRate, double interval,
+  Eigen::Vector3d const & referenceDirLocalMeas,
   double maxGyroError,
-  Eigen::Matrix<double, 3, 1> const & referenceDirGlobal)
+  Eigen::Vector3d const & referenceDirGlobal)
 {
   integrate(angularRate, interval);
 
@@ -143,7 +143,7 @@ void IMUFusionMadgwick::integrate(
   // The quaternion describes the orientation of the local frame in the global frame,
   // so a vector multiplied with it is transformed from local to global
 
-  Eigen::Matrix<double, 3, 1> objectiveFunction =
+  Eigen::Vector3d objectiveFunction =
     d_quaternion.conjugate() * referenceDirGlobal - referenceDirLocalMeas;
 
   auto q1 = d_quaternion.w();

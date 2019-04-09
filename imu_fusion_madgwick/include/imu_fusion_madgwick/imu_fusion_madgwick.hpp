@@ -62,7 +62,7 @@ private:
    * @param angularRate Measured angular rate around axes, in rad/sec, e.g. from gyroscope
    * @param interval Time interval to integrate over, in secons
    */
-  void integrate(Eigen::Matrix<double, 3, 1> const & angularRate, double interval);
+  void integrate(Eigen::Vector3d const & angularRate, double interval);
 
   /** Integrate measurement of angular rate, corrected given a reference measurement
    *
@@ -77,10 +77,10 @@ private:
    * @param referenceDir Reference direction that is measured in global reference frame. By default direction of gravity
    */
   void integrate(
-    Eigen::Matrix<double, 3, 1> const & angularRate, double interval,
-    Eigen::Matrix<double, 3, 1> const & referenceDirMeas,
+    Eigen::Vector3d const & angularRate, double interval,
+    Eigen::Vector3d const & referenceDirMeas,
     double maxGyroError,
-    Eigen::Matrix<double, 3, 1> const & referenceDir = Eigen::Matrix<double, 3, 1>{0, 0, 1});
+    Eigen::Vector3d const & referenceDir = Eigen::Vector3d{0, 0, 1});
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
