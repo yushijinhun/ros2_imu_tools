@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef IMU_FILTER_MADGWICK__IMU_FILTER_MADGWICK_HPP_
-#define IMU_FILTER_MADGWICK__IMU_FILTER_MADGWICK_HPP_
+#ifndef IMU_FUSION_MADGWICK__IMU_FUSION_MADGWICK_HPP_
+#define IMU_FUSION_MADGWICK__IMU_FUSION_MADGWICK_HPP_
 
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
@@ -33,7 +33,7 @@ public:
 private:
   Orientation3d d_orientation;
 
-  using Imu        = sensor_msgs::msg::Imu;
+  using Imu = sensor_msgs::msg::Imu;
   using Quaternion = geometry_msgs::msg::Quaternion;
   Quaternion orientation;
 
@@ -48,9 +48,7 @@ private:
 
   void reset();
   void reset(const Quaternion & quaternion);
-
-
 };
-}  // namespace imu_filter_madgwick
+}  // namespace imu_fusion_madgwick
 
-#endif  // IMU_FILTER_MADGWICK__IMU_FILTER_MADGWICK_HPP_
+#endif  // IMU_FUSION_MADGWICK__IMU_FUSION_MADGWICK_HPP_

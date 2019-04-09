@@ -76,7 +76,8 @@ IMUFusionMadgwick::IMUFusionMadgwick()
 IMUFusionMadgwick::~IMUFusionMadgwick()
 {}
 
-void IMUFusionMadgwick::reset() {
+void IMUFusionMadgwick::reset()
+{
   Quaternion quaternion;
 
   // identity
@@ -88,8 +89,9 @@ void IMUFusionMadgwick::reset() {
   orientation = quaternion;
 }
 
-void IMUFusionMadgwick::reset(const Quaternion & quaternion) {
+void IMUFusionMadgwick::reset(const Quaternion & quaternion)
+{
   orientation = quaternion;
 }
 
-}  // namespace imu_filter_madgwick
+}  // namespace imu_fusion_madgwick

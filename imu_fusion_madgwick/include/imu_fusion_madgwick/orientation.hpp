@@ -18,8 +18,8 @@
 //
 //   Sebastian O.H. Madgwick, April 30, 2010
 
-#ifndef IMU_FILTER_MADGWICK__ORIENTATION_HPP_
-#define IMU_FILTER_MADGWICK__ORIENTATION_HPP_
+#ifndef IMU_FUSION_MADGWICK__ORIENTATION_HPP_
+#define IMU_FUSION_MADGWICK__ORIENTATION_HPP_
 
 #include <Eigen/Geometry>
 #include <iostream>
@@ -145,4 +145,4 @@ void Orientation<T, 3>::integrate(
   d_quaternion.normalize();
 }
 
-#endif  // IMU_FILTER_MADGWICK__ORIENTATION_HPP_
+#endif  // IMU_FUSION_MADGWICK__ORIENTATION_HPP_
