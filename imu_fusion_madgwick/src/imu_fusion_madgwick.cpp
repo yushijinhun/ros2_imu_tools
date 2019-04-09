@@ -22,7 +22,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   lastUpdateTime_(now()),
   d_quaternion{Eigen::Quaterniond::Identity()}
 {
-  get_parameter_or_set("gyroMeasError", gyroMeasError, 3.14159265358979f * (5.0f / 180.0f));
+  get_parameter_or_set("gyro_measuring_error", gyroMeasError, 3.14159265358979f * (5.0f / 180.0f));
 
   // gain is unused
   // float beta;
