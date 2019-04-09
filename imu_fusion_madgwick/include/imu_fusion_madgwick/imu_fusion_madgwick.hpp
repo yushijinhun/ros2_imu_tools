@@ -20,8 +20,6 @@
 
 #include <Eigen/Geometry>
 
-#include "imu_fusion_madgwick/orientation.hpp"
-
 namespace imu_fusion_madgwick
 {
 
