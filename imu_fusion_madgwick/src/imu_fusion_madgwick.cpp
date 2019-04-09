@@ -48,6 +48,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
         lastUpdateTime_ = now();
       }
 
+      //
       integrate(imuRawMsg->angular_velocity, dt, imuRawMsg->linear_acceleration, gyroMeasError);
 
       imuRawMsg->orientation = getQuaternion();
@@ -59,6 +60,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
       imuPub_->publish(imuRawMsg.get());
     });
 }
+
 IMUFusionMadgwick::~IMUFusionMadgwick()
 {}
 
@@ -87,7 +89,7 @@ void IMUFusionMadgwick::reset(const Quaternion & quaternion)
   d_quaternion.z() = quaternion.z;
 }
 
-void IMUFusionMadgwick::reset(Eigen::Quaternion<double> quat)
+void IMUFusionMadgwick::reset(Eigen::Quaterniond quat)
 {
   d_quaternion = quat;
 }

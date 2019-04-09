@@ -42,10 +42,9 @@ private:
   rclcpp::Time lastUpdateTime_;
 
   rclcpp::Subscription<Imu>::SharedPtr imuRawSub_;
-
   rclcpp::Publisher<Imu>::SharedPtr imuPub_;
 
-  Eigen::Quaternion<double> d_quaternion;
+  Eigen::Quaterniond d_quaternion;
 
   Quaternion getQuaternion() const;
 
@@ -53,10 +52,9 @@ private:
   void reset(const Quaternion & quat);
   void reset(Eigen::Quaternion<double> quat);
 
-
   void integrate(
-    geometry_msgs::msg::Vector3 const & angularRate, double interval,
-    geometry_msgs::msg::Vector3 const & referenceDirMeas,
+    geometry_msgs::msg::Vector3 const & angular_velocity, double interval,
+    geometry_msgs::msg::Vector3 const & linear_acceleration,
     double maxGyroError);
 
   /** Integrate measurement of angular rate
@@ -67,6 +65,10 @@ private:
   void integrate(Eigen::Matrix<double, 3, 1> const & angularRate, double interval);
 
   /** Integrate measurement of angular rate, corrected given a reference measurement
+   *
+   * It uses the technique from paper:
+   * "An efficient orientation filter for inertial and inertial/magnetic sensor arrays"
+   * Sebastian O.H. Madgwick, April 30, 2010
    *
    * @param angularRate Measured angular rate around axes, in rad/sec, e.g. from gyroscope
    * @param interval Time interval to integrate over, in seconds
