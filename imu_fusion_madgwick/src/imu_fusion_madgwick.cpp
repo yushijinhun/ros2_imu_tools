@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "imu_filter_madgwick/imu_filter_madgwick.hpp"
+#include "imu_fusion_madgwick/imu_fusion_madgwick.hpp"
 
-namespace imu_filter_madgwick
+namespace imu_fusion_madgwick
 {
 
-IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
+IMUFusionMadgwick::IMUFusionMadgwick()
 : rclcpp::Node{"imu_filter_madgwick_publisher"},
   lastUpdateTime_(now())
 {
@@ -73,8 +73,23 @@ IMUFilterMadgwickPublisher::IMUFilterMadgwickPublisher()
     });
 }
 
-IMUFilterMadgwickPublisher::~IMUFilterMadgwickPublisher()
+IMUFusionMadgwick::~IMUFusionMadgwick()
 {}
 
+void IMUFusionMadgwick::reset() {
+  Quaternion quaternion;
+
+  // identity
+  quaternion.x = 0;
+  quaternion.y = 0;
+  quaternion.z = 0;
+  quaternion.w = 1;
+
+  orientation = quaternion;
+}
+
+void IMUFusionMadgwick::reset(const Quaternion & quaternion) {
+  orientation = quaternion;
+}
 
 }  // namespace imu_filter_madgwick

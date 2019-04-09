@@ -18,29 +18,38 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 
-#include "imu_filter_madgwick/orientation.hpp"
+#include "imu_fusion_madgwick/orientation.hpp"
 
-namespace imu_filter_madgwick
+namespace imu_fusion_madgwick
 {
 
-class IMUFilterMadgwickPublisher : public rclcpp::Node
+class IMUFusionMadgwick : public rclcpp::Node
 {
 public:
-  IMUFilterMadgwickPublisher();
+  IMUFusionMadgwick();
 
-  virtual ~IMUFilterMadgwickPublisher();
+  virtual ~IMUFusionMadgwick();
 
 private:
   Orientation3d d_orientation;
+
+  using Imu        = sensor_msgs::msg::Imu;
+  using Quaternion = geometry_msgs::msg::Quaternion;
+  Quaternion orientation;
 
   bool use_fixed_dt;
   double dt;
   float gyroMeasError;
   rclcpp::Time lastUpdateTime_;
 
-  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imuRawSub_;
+  rclcpp::Subscription<Imu>::SharedPtr imuRawSub_;
 
-  rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imuPub_;
+  rclcpp::Publisher<Imu>::SharedPtr imuPub_;
+
+  void reset();
+  void reset(const Quaternion & quaternion);
+
+
 };
 }  // namespace imu_filter_madgwick
 
