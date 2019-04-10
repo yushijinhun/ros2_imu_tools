@@ -26,40 +26,40 @@ find_package(Eigen3 REQUIRED)
 set(Eigen_INCLUDE_DIR "${EIGEN3_INCLUDE_DIR}")
 message(STATUS "Using Eigen3 include dirs: ${Eigen_INCLUDE_DIR}")
 
-add_library(imu_fusion_madgwick
+add_library(${PROJECT_NAME}
   src/imu_fusion_madgwick.cpp)
 
-target_include_directories(imu_fusion_madgwick PUBLIC
+target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   ${Eigen_INCLUDE_DIR})
 
-ament_target_dependencies(imu_fusion_madgwick
+ament_target_dependencies(${PROJECT_NAME}
   "rclcpp"
   "std_msgs"
   "sensor_msgs")
 
-target_compile_definitions(imu_fusion_madgwick PRIVATE "IMU_FILTER_MADGWICK_BUILDING_LIBRARY")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "IMU_FILTER_MADGWICK_BUILDING_LIBRARY")
 
 install(
   DIRECTORY include/
   DESTINATION include
 )
 install(
-  TARGETS imu_fusion_madgwick
+  TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
-add_executable(imu_fusion_madgwick_node src/imu_fusion_madgwick_node.cpp)
-target_include_directories(imu_fusion_madgwick_node PUBLIC
+add_executable(${PROJECT_NAME}_node src/imu_fusion_madgwick_node.cpp)
+target_include_directories(${PROJECT_NAME}_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(imu_fusion_madgwick_node imu_fusion_madgwick)
+target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
 
-install(TARGETS imu_fusion_madgwick_node
+install(TARGETS ${PROJECT_NAME}_node
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME})
 
@@ -73,7 +73,7 @@ ament_export_interfaces(
   export_${PROJECT_NAME}
 )
 ament_export_libraries(
-  imu_fusion_madgwick
+  ${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
