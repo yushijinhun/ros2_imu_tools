@@ -19,12 +19,10 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
 find_package(Eigen3 REQUIRED)
-set(Eigen_INCLUDE_DIR "${EIGEN3_INCLUDE_DIR}")
-message(STATUS "Using Eigen3 include dirs: ${Eigen_INCLUDE_DIR}")
+message(STATUS "Using Eigen3 include dirs: ${EIGEN3_INCLUDE_DIR}")
 
 add_library(${PROJECT_NAME}
   src/imu_fusion_madgwick.cpp)
@@ -32,14 +30,13 @@ add_library(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${Eigen_INCLUDE_DIR})
+  ${EIGEN3_INCLUDE_DIR})
 
 ament_target_dependencies(${PROJECT_NAME}
   "rclcpp"
-  "std_msgs"
   "sensor_msgs")
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE "IMU_FILTER_MADGWICK_BUILDING_LIBRARY")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "IMU_FUSION_MADGWICK_BUILDING_LIBRARY")
 
 install(
   DIRECTORY include/
