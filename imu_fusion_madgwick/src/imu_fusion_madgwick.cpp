@@ -20,7 +20,7 @@ namespace imu_fusion_madgwick
 IMUFusionMadgwick::IMUFusionMadgwick()
 : rclcpp::Node{"imu_fusion_madgwick"},
   lastUpdateTime_(now()),
-  d_quaternion{Eigen::Quaterniond::Identity()}
+  orientation_{Eigen::Quaterniond::Identity()}
 {
   get_parameter_or_set("gyro_measuring_error", gyroMeasError, 3.14159265358979f * (5.0f / 180.0f));
 
@@ -41,7 +41,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   RCLCPP_INFO(get_logger(), "Subscribe for /imu/data_raw");
   imuRawSub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
-    [ = ](sensor_msgs::msg::Imu::SharedPtr imuRawMsg) {
+    [ = ](sensor_msgs::msg::Imu::SharedPtr imuMsg) {
       if (!use_fixed_dt) {
         // TODO(scheunemann) auto time = imuRawMsg->header.stamp;
         dt = (now() - lastUpdateTime_).seconds();
@@ -49,16 +49,17 @@ IMUFusionMadgwick::IMUFusionMadgwick()
       }
 
       //
-      integrate(imuRawMsg->angular_velocity, dt, imuRawMsg->linear_acceleration, gyroMeasError);
+      integrate(imuMsg->angular_velocity, dt, imuMsg->linear_acceleration, gyroMeasError);
 
       // set new orientation
-      imuRawMsg->orientation = getQuaternion();
+      imuMsg->orientation = getQuaternion();
 
-      // make message valid
-      imuRawMsg->orientation_covariance.at(0) = 0;
+      // indicate that message
+      // has valid orientation
+      imuMsg->orientation_covariance.at(0) = 0;
 
       RCLCPP_DEBUG(get_logger(), "Received raw IMU message and publish IMU message");
-      imuPub_->publish(imuRawMsg);
+      imuPub_->publish(imuMsg);
     });
 }
 
@@ -69,30 +70,30 @@ geometry_msgs::msg::Quaternion IMUFusionMadgwick::getQuaternion() const
 {
   Quaternion quat;
 
-  quat.x = d_quaternion.x();
-  quat.y = d_quaternion.y();
-  quat.z = d_quaternion.z();
-  quat.w = d_quaternion.w();
+  quat.x = orientation_.x();
+  quat.y = orientation_.y();
+  quat.z = orientation_.z();
+  quat.w = orientation_.w();
 
   return quat;
 }
 
 void IMUFusionMadgwick::reset()
 {
-  d_quaternion = Eigen::Quaterniond::Identity();
+  orientation_ = Eigen::Quaterniond::Identity();
 }
 
 void IMUFusionMadgwick::reset(const Quaternion & quaternion)
 {
-  d_quaternion.w() = quaternion.w;
-  d_quaternion.x() = quaternion.x;
-  d_quaternion.y() = quaternion.y;
-  d_quaternion.z() = quaternion.z;
+  orientation_.w() = quaternion.w;
+  orientation_.x() = quaternion.x;
+  orientation_.y() = quaternion.y;
+  orientation_.z() = quaternion.z;
 }
 
-void IMUFusionMadgwick::reset(Eigen::Quaterniond quat)
+void IMUFusionMadgwick::reset(const Eigen::Quaterniond & quat)
 {
-  d_quaternion = quat;
+  orientation_ = quat;
 }
 
 void IMUFusionMadgwick::integrate(
@@ -124,7 +125,7 @@ void IMUFusionMadgwick::integrate(const Eigen::Vector3d & angularRate, double in
   deltaQuat.vec() = sin(thetaMag) / thetaMag * theta;
 
   // T_A2^W = T_A1^W * T_A2^A1
-  d_quaternion = d_quaternion * deltaQuat;
+  orientation_ = orientation_ * deltaQuat;
 }
 
 void IMUFusionMadgwick::integrate(
@@ -144,12 +145,12 @@ void IMUFusionMadgwick::integrate(
   // so a vector multiplied with it is transformed from local to global
 
   Eigen::Vector3d objectiveFunction =
-    d_quaternion.conjugate() * referenceDirGlobal - referenceDirLocalMeas;
+    orientation_.conjugate() * referenceDirGlobal - referenceDirLocalMeas;
 
-  auto q1 = d_quaternion.w();
-  auto q2 = d_quaternion.x();
-  auto q3 = d_quaternion.y();
-  auto q4 = d_quaternion.z();
+  auto q1 = orientation_.w();
+  auto q2 = orientation_.x();
+  auto q3 = orientation_.y();
+  auto q4 = orientation_.z();
 
   auto jacobian =
     (Eigen::Matrix<double, 3, 4>() <<
@@ -165,8 +166,8 @@ void IMUFusionMadgwick::integrate(
     normalizedObjectiveFunctionGradient.normalize();
   }
 
-  d_quaternion.coeffs() -= beta * normalizedObjectiveFunctionGradient * interval;
-  d_quaternion.normalize();
+  orientation_.coeffs() -= beta * normalizedObjectiveFunctionGradient * interval;
+  orientation_.normalize();
 }
 
 }  // namespace imu_fusion_madgwick

@@ -34,22 +34,31 @@ private:
   using Imu = sensor_msgs::msg::Imu;
   using Quaternion = geometry_msgs::msg::Quaternion;
 
+  // parameter
   bool use_fixed_dt;
-  double dt;
   float gyroMeasError;
+
+  double dt;
   rclcpp::Time lastUpdateTime_;
 
   rclcpp::Subscription<Imu>::SharedPtr imuRawSub_;
   rclcpp::Publisher<Imu>::SharedPtr imuPub_;
 
-  Eigen::Quaterniond d_quaternion;
+  Eigen::Quaterniond orientation_;
 
   Quaternion getQuaternion() const;
 
   void reset();
   void reset(const Quaternion & quat);
-  void reset(Eigen::Quaternion<double> quat);
+  void reset(const Eigen::Quaterniond & quat);
 
+  /** A wrapper for the Eigen3 based integration implementation
+   *
+   * @param angular_velocity Measured angular velocity around axes, in rad/sec, e.g. from gyroscope
+   * @param interval Time interval to integrate over, in seconds
+   * @param linear_acceleration Measurement of the linear acceleration along axes, in meter/seconds^2
+   * @param maxGyroError Maximum gyroscope measurement error, in rad/sec. Used to determine correction weight
+   */
   void integrate(
     geometry_msgs::msg::Vector3 const & angular_velocity, double interval,
     geometry_msgs::msg::Vector3 const & linear_acceleration,
