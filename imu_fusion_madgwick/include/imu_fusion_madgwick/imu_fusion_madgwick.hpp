@@ -30,7 +30,6 @@ public:
 
   virtual ~IMUFusionMadgwick();
 
-private:
   using Imu = sensor_msgs::msg::Imu;
   using Quaternion = geometry_msgs::msg::Quaternion;
 

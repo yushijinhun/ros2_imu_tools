@@ -74,14 +74,24 @@ ament_export_libraries(
 )
 
 if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
   find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # uncomment the line when a copyright and license is not present in all source files
-  #set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # uncomment the line when this package is not in a git repo
-  #set(ament_cmake_cpplint_FOUND TRUE)
+  set(ament_cmake_copyright_FOUND TRUE)
+  set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
+
+  ament_add_gtest(${PROJECT_NAME}_tests test/imu_fusion_madgwick_tests.cpp)
+  if(TARGET ${PROJECT_NAME}_tests)
+    target_include_directories(${PROJECT_NAME}_tests PUBLIC
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:include>
+      ${EIGEN3_INCLUDE_DIR})
+    target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
+    ament_target_dependencies(${PROJECT_NAME}_tests
+        "rclcpp"
+        "sensor_msgs")
+  endif()
 endif()
+
 
 ament_package()
