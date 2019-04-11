@@ -33,19 +33,8 @@ public:
   using Imu = sensor_msgs::msg::Imu;
   using Quaternion = geometry_msgs::msg::Quaternion;
 
-  // parameter
-  bool use_fixed_dt;
-  float gyroMeasError;
-
-  double dt;
-  rclcpp::Time lastUpdateTime_;
-
-  rclcpp::Subscription<Imu>::SharedPtr imuRawSub_;
-  rclcpp::Publisher<Imu>::SharedPtr imuPub_;
-
-  Eigen::Quaterniond orientation_;
-
   Quaternion getQuaternion() const;
+  Eigen::Quaterniond getEigenQuaternion() const;
 
   void reset();
   void reset(const Quaternion & quat);
@@ -88,6 +77,19 @@ public:
     double maxGyroError,
     Eigen::Vector3d const & referenceDir = Eigen::Vector3d{0, 0, 1});
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+private:
+  // parameter
+  bool use_fixed_dt;
+  float gyroMeasError;
+
+  double dt;
+  rclcpp::Time lastUpdateTime_;
+
+  rclcpp::Subscription<Imu>::SharedPtr imuRawSub_;
+  rclcpp::Publisher<Imu>::SharedPtr imuPub_;
+
+  Eigen::Quaterniond orientation_;
 };
 
 }  // namespace imu_fusion_madgwick
