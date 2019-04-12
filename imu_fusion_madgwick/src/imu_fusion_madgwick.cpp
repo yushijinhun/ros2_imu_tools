@@ -78,6 +78,11 @@ geometry_msgs::msg::Quaternion IMUFusionMadgwick::getQuaternion() const
   return quat;
 }
 
+Eigen::Quaterniond IMUFusionMadgwick::getEigenQuaternion() const
+{
+  return orientation_;
+}
+
 void IMUFusionMadgwick::reset()
 {
   orientation_ = Eigen::Quaterniond::Identity();
