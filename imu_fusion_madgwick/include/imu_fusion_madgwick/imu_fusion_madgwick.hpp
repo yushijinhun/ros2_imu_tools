@@ -81,10 +81,10 @@ public:
 private:
   // parameter
   bool use_fixed_dt;
-  float gyroMeasError;
+  float gyro_measuring_error;
 
   double dt;
-  rclcpp::Time lastUpdateTime_;
+  rclcpp::Time last_update_time_;
 
   rclcpp::Subscription<Imu>::SharedPtr imuRawSub_;
   rclcpp::Publisher<Imu>::SharedPtr imuPub_;

@@ -19,10 +19,10 @@ namespace imu_fusion_madgwick
 
 IMUFusionMadgwick::IMUFusionMadgwick()
 : rclcpp::Node{"imu_fusion_madgwick"},
-  lastUpdateTime_(now()),
+  last_update_time_(now()),
   orientation_{Eigen::Quaterniond::Identity()}
 {
-  get_parameter_or_set("gyro_measuring_error", gyroMeasError, 3.14159265358979f * (5.0f / 180.0f));
+  get_parameter_or_set("gyro_measuring_error", gyro_measuring_error, 3.14159265358979f * (5.0f / 180.0f));
 
   // gain is unused
   // float beta;
@@ -44,12 +44,12 @@ IMUFusionMadgwick::IMUFusionMadgwick()
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuMsg) {
       if (!use_fixed_dt) {
         // TODO(scheunemann) auto time = imuRawMsg->header.stamp;
-        dt = (now() - lastUpdateTime_).seconds();
-        lastUpdateTime_ = now();
+        dt = (now() - last_update_time_).seconds();
+        last_update_time_ = now();
       }
 
       //
-      integrate(imuMsg->angular_velocity, dt, imuMsg->linear_acceleration, gyroMeasError);
+      integrate(imuMsg->angular_velocity, dt, imuMsg->linear_acceleration, gyro_measuring_error);
 
       // set new orientation
       imuMsg->orientation = getQuaternion();
