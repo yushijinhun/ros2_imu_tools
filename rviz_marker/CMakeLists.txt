@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(rviz_marker)
+project(imu_rviz_marker)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -19,44 +19,42 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
-add_library(rviz_marker
+add_library(${PROJECT_NAME}
   src/rviz_marker.cpp)
 
-target_include_directories(rviz_marker PUBLIC
+target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(rviz_marker
+ament_target_dependencies(${PROJECT_NAME}
   "rclcpp"
-  "std_msgs"
   "sensor_msgs"
   "visualization_msgs")
 
-target_compile_definitions(rviz_marker PRIVATE "RVIZ_MARKER_BUILDING_LIBRARY")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "RVIZ_MARKER_BUILDING_LIBRARY")
 
 install(
   DIRECTORY include/
   DESTINATION include
 )
 install(
-  TARGETS rviz_marker
+  TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
-add_executable(rviz_marker_node src/rviz_marker_node.cpp)
-target_include_directories(rviz_marker_node PUBLIC
+add_executable(${PROJECT_NAME}_node src/rviz_marker_node.cpp)
+target_include_directories(${PROJECT_NAME}_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(rviz_marker_node rviz_marker)
+target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
 
-install(TARGETS rviz_marker_node
+install(TARGETS ${PROJECT_NAME}_node
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME})
 
