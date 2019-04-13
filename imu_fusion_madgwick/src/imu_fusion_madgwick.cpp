@@ -22,34 +22,34 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   last_update_time_(now()),
   orientation_{Eigen::Quaterniond::Identity()}
 {
-  get_parameter_or_set("gyro_measuring_error", gyro_measuring_error, 3.14159265358979f * (5.0f / 180.0f));
+  get_parameter_or_set("gyro_measuring_error", gyro_measuring_error_, 3.14159265358979f * (5.0f / 180.0f));
 
   // gain is unused
   // float beta;
   // get_parameter_or_set("gyroMeasError", beta, sqrt(3.0f / 4.0f) * gyroMeasError);
 
   // static sampling periodin seconds
-  get_parameter_or_set("use_fixed_dt", use_fixed_dt, false);
-  get_parameter_or_set("fixed_dt", dt, 0.008);
+  get_parameter_or_set("use_fixed_dt", use_fixed_dt_, false);
+  get_parameter_or_set("fixed_dt", dt_, 0.008);
 
 
   RCLCPP_INFO(get_logger(), "Initialise robot orientation");
   reset();
 
-  imuPub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data");
+  pub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data");
 
   RCLCPP_INFO(get_logger(), "Subscribe for /imu/data_raw");
-  imuRawSub_ = create_subscription<sensor_msgs::msg::Imu>(
+  sub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuMsg) {
-      if (!use_fixed_dt) {
+      if (!use_fixed_dt_) {
         // TODO(scheunemann) auto time = imuRawMsg->header.stamp;
-        dt = (now() - last_update_time_).seconds();
+        dt_ = (now() - last_update_time_).seconds();
         last_update_time_ = now();
       }
 
       //
-      integrate(imuMsg->angular_velocity, dt, imuMsg->linear_acceleration, gyro_measuring_error);
+      integrate(imuMsg->angular_velocity, dt_, imuMsg->linear_acceleration, gyro_measuring_error_);
 
       // set new orientation
       imuMsg->orientation = getQuaternion();
@@ -59,7 +59,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
       imuMsg->orientation_covariance.at(0) = 0;
 
       RCLCPP_DEBUG(get_logger(), "Received raw IMU message and publish IMU message");
-      imuPub_->publish(imuMsg);
+      pub_->publish(imuMsg);
     });
 }
 

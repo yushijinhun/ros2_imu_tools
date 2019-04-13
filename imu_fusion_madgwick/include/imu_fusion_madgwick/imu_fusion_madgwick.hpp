@@ -78,14 +78,14 @@ public:
 
 private:
   // parameter
-  bool use_fixed_dt;
-  float gyro_measuring_error;
+  bool use_fixed_dt_;
+  float gyro_measuring_error_;
 
-  double dt;
+  double dt_;
   rclcpp::Time last_update_time_;
 
-  rclcpp::Subscription<Imu>::SharedPtr imuRawSub_;
-  rclcpp::Publisher<Imu>::SharedPtr imuPub_;
+  rclcpp::Subscription<Imu>::SharedPtr sub_;
+  rclcpp::Publisher<Imu>::SharedPtr pub_;
 
   Eigen::Quaterniond orientation_;
 };
