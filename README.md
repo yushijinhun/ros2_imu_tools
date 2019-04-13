@@ -5,7 +5,7 @@ This repository provides packages for computing and visualizing the orieantion o
 
 ### `imu_fusion_madgwick`
 
-This package implements a filte for fusing accelerometer and gyrometer readings to orienation. It subscribes to the topic `/Imu/data_raw` and publishes the comuted orientation to `/Imu/data`(including the raw accelerometer and the gyrometer readings)
+This package implements a filte for fusing accelerometer and gyrometer readings to orienation. It subscribes to the topic `/Imu/data_raw` and publishes the computed orientation to `/Imu/data`(including the raw accelerometer and raw gyrometer readings).
 
 ### `imu_viz`
 
