@@ -104,53 +104,52 @@ void IMUFusionMadgwick::reset(const Eigen::Quaterniond & quat)
 void IMUFusionMadgwick::integrate(
   geometry_msgs::msg::Vector3 const & angular_velocity, double interval,
   geometry_msgs::msg::Vector3 const & linear_acceleration,
-  double maxGyroError)
+  double max_gyro_error)
 {
-  auto referenceDirMes = Eigen::Vector3d{
+  auto reference_dir_measures = Eigen::Vector3d{
     linear_acceleration.x, linear_acceleration.y, linear_acceleration.z
   };
 
-  auto angularRate = Eigen::Vector3d{
+  auto angular_rate = Eigen::Vector3d{
     angular_velocity.x, angular_velocity.y, angular_velocity.z
   };
 
-  integrate(angularRate, interval, referenceDirMes, maxGyroError);
+  integrate(angular_rate, interval, reference_dir_measures, max_gyro_error);
 }
 
-void IMUFusionMadgwick::integrate(const Eigen::Vector3d & angularRate, double interval)
+void IMUFusionMadgwick::integrate(const Eigen::Vector3d & angular_rate, double interval)
 {
-  auto theta = angularRate * interval / 2;
-  auto thetaMag = theta.norm();
-  if (thetaMag == 0) {
+  auto theta = angular_rate * interval / 2;
+  auto theta_mag = theta.norm();
+  if (theta_mag == 0) {
     return;
   }
 
-  auto deltaQuat = Eigen::Quaterniond{};
-  deltaQuat.w() = cos(thetaMag);
-  deltaQuat.vec() = sin(thetaMag) / thetaMag * theta;
+  auto delta_quat = Eigen::Quaterniond{};
+  delta_quat.w() = cos(theta_mag);
+  delta_quat.vec() = sin(theta_mag) / theta_mag * theta;
 
   // T_A2^W = T_A1^W * T_A2^A1
-  orientation_ = orientation_ * deltaQuat;
+  orientation_ = orientation_ * delta_quat;
 }
 
-void IMUFusionMadgwick::integrate(
-  Eigen::Vector3d const & angularRate, double interval,
-  Eigen::Vector3d const & referenceDirLocalMeas,
-  double maxGyroError,
-  Eigen::Vector3d const & referenceDirGlobal)
+void IMUFusionMadgwick::integrate(Eigen::Vector3d const & angular_rate, double interval,
+  Eigen::Vector3d const & reference_dir_measures,
+  double max_gyro_error,
+  Eigen::Vector3d const & reference_dir_global)
 {
-  integrate(angularRate, interval);
+  integrate(angular_rate, interval);
 
-  double constexpr sqrt34 = std::sqrt(0.75);
-  auto beta = sqrt34 * maxGyroError;
+  double constexpr kSqrt34 = std::sqrt(0.75);
+  auto beta = kSqrt34 * max_gyro_error;
 
   // The objective function is the difference between
   // expected and measured reference dir in local frame
   // The quaternion describes the orientation of the local frame in the global frame,
   // so a vector multiplied with it is transformed from local to global
 
-  Eigen::Vector3d objectiveFunction =
-    orientation_.conjugate() * referenceDirGlobal - referenceDirLocalMeas;
+  Eigen::Vector3d objective_function =
+    orientation_.conjugate() * reference_dir_global - reference_dir_measures;
 
   auto q1 = orientation_.w();
   auto q2 = orientation_.x();
@@ -164,14 +163,14 @@ void IMUFusionMadgwick::integrate(
     -4 * q2, -4 * q3, 0.0, 0.0   ).
     finished();
 
-  Eigen::Vector4d normalizedObjectiveFunctionGradient =
-    jacobian.transpose() * objectiveFunction;
+  Eigen::Vector4d normalized_objective_function_gradient =
+    jacobian.transpose() * objective_function;
 
-  if (normalizedObjectiveFunctionGradient.squaredNorm() > 1e-16) {
-    normalizedObjectiveFunctionGradient.normalize();
+  if (normalized_objective_function_gradient.squaredNorm() > 1e-16) {
+    normalized_objective_function_gradient.normalize();
   }
 
-  orientation_.coeffs() -= beta * normalizedObjectiveFunctionGradient * interval;
+  orientation_.coeffs() -= beta * normalized_objective_function_gradient * interval;
   orientation_.normalize();
 }
 

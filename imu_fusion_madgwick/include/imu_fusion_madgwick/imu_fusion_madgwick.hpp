@@ -47,10 +47,9 @@ public:
    * @param linear_acceleration Measurement of the linear acceleration along axes, in meter/seconds^2
    * @param maxGyroError Maximum gyroscope measurement error, in rad/sec. Used to determine correction weight
    */
-  void integrate(
-    geometry_msgs::msg::Vector3 const & angular_velocity, double interval,
+  void integrate(geometry_msgs::msg::Vector3 const & angular_velocity, double interval,
     geometry_msgs::msg::Vector3 const & linear_acceleration,
-    double maxGyroError);
+    double max_gyro_error);
 
   /** Integrate measurement of angular rate
    *
@@ -71,10 +70,9 @@ public:
    * @param maxGyroError Maximum gyroscope measurement error, in rad/sec. Used to determine correction weight
    * @param referenceDir Reference direction that is measured in global reference frame. By default direction of gravity
    */
-  void integrate(
-    Eigen::Vector3d const & angularRate, double interval,
-    Eigen::Vector3d const & referenceDirMeas,
-    double maxGyroError,
+  void integrate(Eigen::Vector3d const & angular_rate, double interval,
+    Eigen::Vector3d const & reference_dir_measures,
+    double max_gyro_error,
     Eigen::Vector3d const & referenceDir = Eigen::Vector3d{0, 0, 1});
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
