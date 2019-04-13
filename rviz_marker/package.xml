@@ -2,8 +2,9 @@
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
   <name>rviz_marker</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <version>0.1.0</version>
+  <description>This package provides a visualization message marker array
+  for visualizating the current axes of an IMU.</description>
   <maintainer email="find@mms.ai">ms</maintainer>
   <license>Apache License 2.0</license>
 
