@@ -40,6 +40,7 @@ private:
 
   // parameter
   std::string frame_id_;
+  double scale_axes_;
 
   MarkerArray marker_array_;
   rclcpp::Publisher<MarkerArray>::SharedPtr pub_;

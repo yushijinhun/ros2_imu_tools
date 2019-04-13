@@ -28,6 +28,7 @@ ImuVizPublisher::ImuVizPublisher()
 
   //
   get_parameter_or_set("frame_id", frame_id_, std::string("base_link"));
+  get_parameter_or_set("scale_axes_", scale_axes_, 0.5);
 
   //
   RCLCPP_INFO(get_logger(), "Setup axes marker");
@@ -82,8 +83,8 @@ ImuVizPublisher::Marker ImuVizPublisher::baseAxisMarker(std::string axis_name)
   axis_marker.type = Marker::ARROW;
   axis_marker.action = Marker::ADD;
 
-  axis_marker.scale.x = 0.1;  // shaft diameter
-  axis_marker.scale.y = 0.2;  // head diameter
+  axis_marker.scale.x = 0.1*scale_axes_;  // shaft diameter
+  axis_marker.scale.y = 0.2*scale_axes_;  // head diameter
   // axisMarker.scale.z = 0.1; // head length
 
   // set start/end point to origin
@@ -96,13 +97,13 @@ ImuVizPublisher::Marker ImuVizPublisher::baseAxisMarker(std::string axis_name)
   // change endpoint
   if (axis_name == "X") {
     axis_marker.color.r = 1;
-    axis_marker.points.at(1).x = 1;
+    axis_marker.points.at(1).x = 1.*scale_axes_;
   } else if (axis_name == "Y") {
     axis_marker.color.g = 1;
-    axis_marker.points.at(1).y = 1;
+    axis_marker.points.at(1).y = 1.*scale_axes_;
   } else if (axis_name == "Z") {
     axis_marker.color.b = 1;
-    axis_marker.points.at(1).z = 1;
+    axis_marker.points.at(1).z = 1.*scale_axes_;
   }
 
   return axis_marker;
