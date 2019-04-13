@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rviz_marker/rviz_marker.hpp"
+#include "imu_viz/imu_viz.hpp"
 
 #include <cstdio>
 #include <memory>

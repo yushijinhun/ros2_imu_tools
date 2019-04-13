@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-#include "rviz_marker/rviz_marker.hpp"
+#include "imu_viz/imu_viz.hpp"
 
 namespace rviz_marker
 {

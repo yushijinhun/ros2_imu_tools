@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(imu_rviz_marker)
+project(imu_viz)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -23,7 +23,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
 add_library(${PROJECT_NAME}
-  src/rviz_marker.cpp)
+  src/imu_viz.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -34,7 +34,7 @@ ament_target_dependencies(${PROJECT_NAME}
   "sensor_msgs"
   "visualization_msgs")
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE "RVIZ_MARKER_BUILDING_LIBRARY")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "IMU_VIZ_BUILDING_LIBRARY")
 
 install(
   DIRECTORY include/
@@ -48,7 +48,7 @@ install(
   RUNTIME DESTINATION bin
 )
 
-add_executable(${PROJECT_NAME}_node src/rviz_marker_node.cpp)
+add_executable(${PROJECT_NAME}_node src/imu_viz_node.cpp)
 target_include_directories(${PROJECT_NAME}_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)

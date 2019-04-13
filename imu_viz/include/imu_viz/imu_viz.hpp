@@ -15,8 +15,6 @@
 #ifndef RVIZ_MARKER__RVIZ_MARKER_HPP_
 #define RVIZ_MARKER__RVIZ_MARKER_HPP_
 
-#include "rviz_marker/rviz_marker.hpp"
-
 #include <sensor_msgs/msg/imu.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 #include <rclcpp/rclcpp.hpp>
