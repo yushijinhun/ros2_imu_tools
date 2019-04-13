@@ -36,12 +36,13 @@ private:
   using Marker = visualization_msgs::msg::Marker;
   using MarkerArray = visualization_msgs::msg::MarkerArray;
 
-  rclcpp::Subscription<ImuData>::SharedPtr imuSub_;
+  rclcpp::Subscription<ImuData>::SharedPtr sub_;
 
-  MarkerArray markerArrayMsg;
-  rclcpp::Publisher<MarkerArray>::SharedPtr markerPub_;
-
+  // parameter
   std::string frame_id_;
+
+  MarkerArray marker_array_;
+  rclcpp::Publisher<MarkerArray>::SharedPtr pub_;
 
   Marker baseAxisMarker(std::string axis_name);
 };

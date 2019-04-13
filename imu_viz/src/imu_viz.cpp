@@ -23,7 +23,7 @@ namespace imu_viz
 ImuVizPublisher::ImuVizPublisher()
 : rclcpp::Node{"imu_viz_publisher"}
 {
-  markerPub_ = create_publisher<visualization_msgs::msg::MarkerArray>(
+  pub_ = create_publisher<visualization_msgs::msg::MarkerArray>(
     "/imu/viz");
 
   //
@@ -35,22 +35,22 @@ ImuVizPublisher::ImuVizPublisher()
   std::vector<std::string> axes = {"X", "Y", "Z"};
   for (auto & name : axes) {
     Marker marker = baseAxisMarker(name);
-    markerArrayMsg.markers.push_back(marker);
+    marker_array_.markers.push_back(marker);
   }
 
-  imuSub_ = create_subscription<ImuData>(
+  sub_ = create_subscription<ImuData>(
     "/imu/data",
-    [&](ImuData::SharedPtr imuMsg) {
+    [&](ImuData::SharedPtr imu_msg) {
       auto timeNow = now();
 
-      for (auto & marker : markerArrayMsg.markers) {
+      for (auto & marker : marker_array_.markers) {
         marker.header.stamp = timeNow;
         marker.action = Marker::MODIFY;
-        marker.pose.orientation = imuMsg.get()->orientation;
+        marker.pose.orientation = imu_msg->orientation;
       }
 
       RCLCPP_DEBUG(get_logger(), "Publish new message of MarkerArray");
-      markerPub_->publish(markerArrayMsg);
+      pub_->publish(marker_array_);
     });
 }
 
@@ -58,12 +58,12 @@ ImuVizPublisher::~ImuVizPublisher()
 {
   RCLCPP_INFO(get_logger(), "Delete axes marker");
 
-  for (auto & marker : markerArrayMsg.markers) {
+  for (auto & marker : marker_array_.markers) {
     marker.action = Marker::DELETE;
     // TODO(marcus) set duration
   }
 
-  markerPub_->publish(markerArrayMsg);
+  pub_->publish(marker_array_);
 }
 
 ImuVizPublisher::Marker ImuVizPublisher::baseAxisMarker(std::string axis_name)
@@ -73,39 +73,39 @@ ImuVizPublisher::Marker ImuVizPublisher::baseAxisMarker(std::string axis_name)
   // origin.y = 0;
   // origin.z = 0;
 
-  visualization_msgs::msg::Marker axisMarker;
+  visualization_msgs::msg::Marker axis_marker;
 
-  axisMarker.header.frame_id = frame_id_;
-  axisMarker.header.stamp = now();
-  axisMarker.id = 0;
-  axisMarker.ns = "imu_viz/" + axis_name;
-  axisMarker.type = Marker::ARROW;
-  axisMarker.action = Marker::ADD;
+  axis_marker.header.frame_id = frame_id_;
+  axis_marker.header.stamp = now();
+  axis_marker.id = 0;
+  axis_marker.ns = "imu_viz/" + axis_name;
+  axis_marker.type = Marker::ARROW;
+  axis_marker.action = Marker::ADD;
 
-  axisMarker.scale.x = 0.1;  // shaft diameter
-  axisMarker.scale.y = 0.2;  // head diameter
+  axis_marker.scale.x = 0.1;  // shaft diameter
+  axis_marker.scale.y = 0.2;  // head diameter
   // axisMarker.scale.z = 0.1; // head length
 
   // set start/end point to origin
-  axisMarker.points.push_back(origin);
-  axisMarker.points.push_back(origin);
+  axis_marker.points.push_back(origin);
+  axis_marker.points.push_back(origin);
 
-  axisMarker.color.a = 1;
+  axis_marker.color.a = 1;
 
   // change color: XYZ -> RGB
   // change endpoint
   if (axis_name == "X") {
-    axisMarker.color.r = 1;
-    axisMarker.points.at(1).x = 1;
+    axis_marker.color.r = 1;
+    axis_marker.points.at(1).x = 1;
   } else if (axis_name == "Y") {
-    axisMarker.color.g = 1;
-    axisMarker.points.at(1).y = 1;
+    axis_marker.color.g = 1;
+    axis_marker.points.at(1).y = 1;
   } else if (axis_name == "Z") {
-    axisMarker.color.b = 1;
-    axisMarker.points.at(1).z = 1;
+    axis_marker.color.b = 1;
+    axis_marker.points.at(1).z = 1;
   }
 
-  return axisMarker;
+  return axis_marker;
 }
 
 }  // namespace imu_viz
