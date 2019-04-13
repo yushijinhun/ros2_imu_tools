@@ -5,7 +5,8 @@
   <version>0.1.0</version>
   <description>This package provides a visualization message marker array
   for visualizating the current axes of an IMU.</description>
-  <maintainer email="find@mms.ai">ms</maintainer>
+  <maintainer email="find@mms.ai">Marcus M. Scheunemann</maintainer>
+  <maintainer email="sgvandijk@gmail.com">Sander G. van Dijk</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
