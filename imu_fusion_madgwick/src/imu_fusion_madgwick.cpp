@@ -22,7 +22,8 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   last_update_time_(now()),
   orientation_{Eigen::Quaterniond::Identity()}
 {
-  get_parameter_or_set("gyro_measuring_error", gyro_measuring_error_, 3.14159265358979f * (5.0f / 180.0f));
+  get_parameter_or_set("gyro_measuring_error", gyro_measuring_error_,
+    3.14159265358979f * (5.0f / 180.0f));
 
   // gain is unused
   // float beta;
@@ -133,7 +134,8 @@ void IMUFusionMadgwick::integrate(const Eigen::Vector3d & angular_rate, double i
   orientation_ = orientation_ * delta_quat;
 }
 
-void IMUFusionMadgwick::integrate(Eigen::Vector3d const & angular_rate, double interval,
+void IMUFusionMadgwick::integrate(
+  Eigen::Vector3d const & angular_rate, double interval,
   Eigen::Vector3d const & reference_dir_measures,
   double max_gyro_error,
   Eigen::Vector3d const & reference_dir_global)
