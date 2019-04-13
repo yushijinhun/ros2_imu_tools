@@ -12,14 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "imu_filter_madgwick/imu_filter_madgwick.hpp"
+#include "imu_fusion_madgwick/imu_fusion_madgwick.hpp"
+
 #include <cstdio>
+#include <memory>
 
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
 
+  auto node = std::make_shared<imu_fusion_madgwick::IMUFusionMadgwick>();
+  rclcpp::spin(node);
+  rclcpp::shutdown();
+  node = nullptr;
 
-  printf("hello world imu_filter_madgwick package\n");
   return 0;
 }

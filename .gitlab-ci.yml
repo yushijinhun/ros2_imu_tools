@@ -17,3 +17,7 @@ test:
   stage: test
   script:
   - colcon test --event-handlers console_cohesion+ --return-code-on-test-failure
+  artifacts:
+    reports:
+      junit:
+      - build/imu_fusion_madgwick/test_results/imu_fusion_madgwick/*.xunit.xml
