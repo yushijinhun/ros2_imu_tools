@@ -39,7 +39,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
 
   pub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data");
 
-  RCLCPP_INFO(get_logger(), "Subscribe for /imu/data_raw");
+  RCLCPP_INFO(get_logger(), "Subscribe to /imu/data_raw");
   sub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuMsg) {
