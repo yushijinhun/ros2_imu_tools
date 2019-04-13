@@ -24,7 +24,7 @@ ImuVizPublisher::ImuVizPublisher()
 : rclcpp::Node{"imu_viz_publisher"}
 {
   markerPub_ = create_publisher<visualization_msgs::msg::MarkerArray>(
-    "/visualization_msg/marker_array");
+    "/imu/viz");
 
   //
   RCLCPP_INFO(get_logger(), "Setup axes marker");
@@ -75,7 +75,7 @@ ImuVizPublisher::Marker ImuVizPublisher::baseAxisMarker(std::string axis_name)
   axisMarker.header.frame_id = "base_link";
   axisMarker.header.stamp = now();
   axisMarker.id = 0;
-  axisMarker.ns = "imu_visualization/" + axis_name;
+  axisMarker.ns = "imu_viz/" + axis_name;
   axisMarker.type = Marker::ARROW;
   axisMarker.action = Marker::ADD;
 
