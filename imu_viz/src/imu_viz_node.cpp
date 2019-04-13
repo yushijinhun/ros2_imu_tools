@@ -21,7 +21,7 @@ int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
 
-  auto node = std::make_shared<rviz_marker::RvizMarkerPublisher>();
+  auto node = std::make_shared<imu_viz::ImuVizPublisher>();
   rclcpp::spin(node);
   rclcpp::shutdown();
   node = nullptr;

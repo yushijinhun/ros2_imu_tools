@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef RVIZ_MARKER__RVIZ_MARKER_HPP_
-#define RVIZ_MARKER__RVIZ_MARKER_HPP_
+#ifndef IMU_VIZ__IMU_VIZ_HPP_
+#define IMU_VIZ__IMU_VIZ_HPP_
 
 #include <sensor_msgs/msg/imu.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
@@ -21,15 +21,15 @@
 
 #include <string>
 
-namespace rviz_marker
+namespace imu_viz
 {
 
-class RvizMarkerPublisher : public rclcpp::Node
+class ImuVizPublisher : public rclcpp::Node
 {
 public:
-  RvizMarkerPublisher();
+  ImuVizPublisher();
 
-  virtual ~RvizMarkerPublisher();
+  virtual ~ImuVizPublisher();
 
 private:
   using ImuData = sensor_msgs::msg::Imu;
@@ -43,6 +43,6 @@ private:
 
   Marker baseAxisMarker(std::string axis_name);
 };
-}  // namespace rviz_marker
+}  // namespace imu_viz
 
-#endif  // RVIZ_MARKER__RVIZ_MARKER_HPP_
+#endif  // IMU_VIZ__IMU_VIZ_HPP_

@@ -17,11 +17,11 @@
 
 #include "imu_viz/imu_viz.hpp"
 
-namespace rviz_marker
+namespace imu_viz
 {
 
-RvizMarkerPublisher::RvizMarkerPublisher()
-: rclcpp::Node{"rviz_marker_publisher"}
+ImuVizPublisher::ImuVizPublisher()
+: rclcpp::Node{"imu_viz_publisher"}
 {
   markerPub_ = create_publisher<visualization_msgs::msg::MarkerArray>(
     "/visualization_msg/marker_array");
@@ -51,7 +51,7 @@ RvizMarkerPublisher::RvizMarkerPublisher()
     });
 }
 
-RvizMarkerPublisher::~RvizMarkerPublisher()
+ImuVizPublisher::~ImuVizPublisher()
 {
   RCLCPP_INFO(get_logger(), "Delete axes marker");
 
@@ -63,7 +63,7 @@ RvizMarkerPublisher::~RvizMarkerPublisher()
   markerPub_->publish(markerArrayMsg);
 }
 
-RvizMarkerPublisher::Marker RvizMarkerPublisher::baseAxisMarker(std::string axis_name)
+ImuVizPublisher::Marker ImuVizPublisher::baseAxisMarker(std::string axis_name)
 {
   geometry_msgs::msg::Point origin;
   // origin.x = 0;
@@ -105,4 +105,4 @@ RvizMarkerPublisher::Marker RvizMarkerPublisher::baseAxisMarker(std::string axis
   return axisMarker;
 }
 
-}  // namespace rviz_marker
+}  // namespace imu_viz
