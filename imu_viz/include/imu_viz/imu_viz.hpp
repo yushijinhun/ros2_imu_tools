@@ -41,6 +41,8 @@ private:
   MarkerArray markerArrayMsg;
   rclcpp::Publisher<MarkerArray>::SharedPtr markerPub_;
 
+  std::string frame_id_;
+
   Marker baseAxisMarker(std::string axis_name);
 };
 }  // namespace imu_viz

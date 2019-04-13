@@ -27,6 +27,9 @@ ImuVizPublisher::ImuVizPublisher()
     "/imu/viz");
 
   //
+  get_parameter_or_set("frame_id", frame_id_, std::string("base_link"));
+
+  //
   RCLCPP_INFO(get_logger(), "Setup axes marker");
 
   std::vector<std::string> axes = {"X", "Y", "Z"};
@@ -72,7 +75,7 @@ ImuVizPublisher::Marker ImuVizPublisher::baseAxisMarker(std::string axis_name)
 
   visualization_msgs::msg::Marker axisMarker;
 
-  axisMarker.header.frame_id = "base_link";
+  axisMarker.header.frame_id = frame_id_;
   axisMarker.header.stamp = now();
   axisMarker.id = 0;
   axisMarker.ns = "imu_viz/" + axis_name;
