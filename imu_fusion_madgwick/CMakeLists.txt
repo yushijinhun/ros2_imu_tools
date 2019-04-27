@@ -65,6 +65,7 @@ ament_export_dependencies(
 )
 ament_export_include_directories(
   include
+  ${EIGEN3_INCLUDE_DIR}
 )
 ament_export_interfaces(
   export_${PROJECT_NAME}
