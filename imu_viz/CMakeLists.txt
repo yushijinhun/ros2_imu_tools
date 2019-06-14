@@ -34,6 +34,8 @@ ament_target_dependencies(${PROJECT_NAME}
   "sensor_msgs"
   "visualization_msgs")
 
+target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
+
 target_compile_definitions(${PROJECT_NAME} PRIVATE "IMU_VIZ_BUILDING_LIBRARY")
 
 install(
@@ -53,6 +55,7 @@ target_include_directories(${PROJECT_NAME}_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
+target_compile_options(${PROJECT_NAME}_node PRIVATE -Werror)
 
 install(TARGETS ${PROJECT_NAME}_node
   EXPORT export_${PROJECT_NAME}
