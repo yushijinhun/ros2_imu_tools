@@ -22,26 +22,27 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   last_update_time_(now()),
   orientation_{Eigen::Quaterniond::Identity()}
 {
-  get_parameter_or_set("gyro_measuring_error", gyro_measuring_error_,
-    3.14159265358979f * (5.0f / 180.0f));
+  gyro_measuring_error_ =
+    declare_parameter("gyro_measuring_error", 3.14159265358979f * (5.0f / 180.0f));
 
   // gain is unused
   // float beta;
   // get_parameter_or_set("gyroMeasError", beta, sqrt(3.0f / 4.0f) * gyroMeasError);
 
   // static sampling periodin seconds
-  get_parameter_or_set("use_fixed_dt", use_fixed_dt_, false);
-  get_parameter_or_set("fixed_dt", dt_, 0.008);
+  use_fixed_dt_ = declare_parameter("use_fixed_dt", false);
+  dt_ = declare_parameter("fixed_dt", 0.008);
 
 
   RCLCPP_INFO(get_logger(), "Initialise robot orientation");
   reset();
 
-  pub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data");
+  pub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data", 10);
 
   RCLCPP_INFO(get_logger(), "Subscribe to /imu/data_raw");
   sub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
+    10,
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuMsg) {
       if (!use_fixed_dt_) {
         // TODO(scheunemann) auto time = imuRawMsg->header.stamp;
@@ -60,7 +61,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
       imuMsg->orientation_covariance.at(0) = 0;
 
       RCLCPP_DEBUG(get_logger(), "Received raw IMU message and publish IMU message");
-      pub_->publish(imuMsg);
+      pub_->publish(*imuMsg);
     });
 }
 
@@ -142,7 +143,7 @@ void IMUFusionMadgwick::integrate(
 {
   integrate(angular_rate, interval);
 
-  double constexpr kSqrt34 = std::sqrt(0.75);
+  double constexpr kSqrt34 = 0.866025403784; // sqrt(0.75);
   auto beta = kSqrt34 * max_gyro_error;
 
   // The objective function is the difference between

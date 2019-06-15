@@ -24,11 +24,11 @@ ImuVizPublisher::ImuVizPublisher()
 : rclcpp::Node{"imu_viz_publisher"}
 {
   pub_ = create_publisher<visualization_msgs::msg::MarkerArray>(
-    "/imu/viz");
+    "/imu/viz", 10);
 
   //
-  get_parameter_or_set("frame_id", frame_id_, std::string("base_link"));
-  get_parameter_or_set("scale_axes_", scale_axes_, 0.5);
+  frame_id_ = declare_parameter("frame_id", std::string{"base_link"});
+  scale_axes_ = declare_parameter("scale_axes_", 0.5);
 
   //
   RCLCPP_INFO(get_logger(), "Setup axes marker");
@@ -41,6 +41,7 @@ ImuVizPublisher::ImuVizPublisher()
 
   sub_ = create_subscription<ImuData>(
     "/imu/data",
+    10,
     [&](ImuData::SharedPtr imu_msg) {
       auto timeNow = now();
 
