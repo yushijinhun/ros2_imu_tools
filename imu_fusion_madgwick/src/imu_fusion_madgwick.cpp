@@ -70,6 +70,8 @@ IMUFusionMadgwick::IMUFusionMadgwick()
       // create and transform tf
       geometry_msgs::msg::TransformStamped transform;
       transform.transform.set__rotation(imuMsg->orientation);
+      transform.set__child_frame_id("base_link");
+      transform.header = imuMsg->header;
 
       tf_broadcaster_.sendTransform(transform);
     });
@@ -153,7 +155,7 @@ void IMUFusionMadgwick::integrate(
 {
   integrate(angular_rate, interval);
 
-  double constexpr kSqrt34 = 0.866025403784; // sqrt(0.75);
+  double constexpr kSqrt34 = 0.866025403784;  // sqrt(0.75);
   auto beta = kSqrt34 * max_gyro_error;
 
   // The objective function is the difference between
