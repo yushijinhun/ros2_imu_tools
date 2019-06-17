@@ -20,6 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 find_package(Eigen3 REQUIRED)
 message(STATUS "Using Eigen3 include dirs: ${EIGEN3_INCLUDE_DIR}")
@@ -34,7 +35,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 ament_target_dependencies(${PROJECT_NAME}
   "rclcpp"
-  "sensor_msgs")
+  "sensor_msgs"
+  "tf2_ros")
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
 
