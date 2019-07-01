@@ -20,21 +20,19 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
-
-find_package(Eigen3 REQUIRED)
-message(STATUS "Using Eigen3 include dirs: ${EIGEN3_INCLUDE_DIR}")
+find_package(tf2_eigen REQUIRED)
 
 add_library(${PROJECT_NAME}
   src/imu_fusion_madgwick.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
-  ${EIGEN3_INCLUDE_DIR})
+  $<INSTALL_INTERFACE:include>)
 
 ament_target_dependencies(${PROJECT_NAME}
   "rclcpp"
-  "sensor_msgs")
+  "sensor_msgs"
+  "tf2_eigen")
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
 
@@ -65,10 +63,10 @@ install(TARGETS ${PROJECT_NAME}_node
 
 ament_export_dependencies(
   "sensor_msgs"
+  "tf2_eigen"
 )
 ament_export_include_directories(
   include
-  ${EIGEN3_INCLUDE_DIR}
 )
 ament_export_interfaces(
   export_${PROJECT_NAME}
@@ -88,12 +86,12 @@ if(BUILD_TESTING)
   if(TARGET ${PROJECT_NAME}_tests)
     target_include_directories(${PROJECT_NAME}_tests PUBLIC
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-      $<INSTALL_INTERFACE:include>
-      ${EIGEN3_INCLUDE_DIR})
+      $<INSTALL_INTERFACE:include>)
     target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
     ament_target_dependencies(${PROJECT_NAME}_tests
         "rclcpp"
-        "sensor_msgs")
+        "sensor_msgs"
+        "tf2_eigen")
   endif()
 endif()
 
