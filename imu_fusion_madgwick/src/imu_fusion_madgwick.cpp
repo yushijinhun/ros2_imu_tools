@@ -143,7 +143,7 @@ void IMUFusionMadgwick::integrate(
 {
   integrate(angular_rate, interval);
 
-  double constexpr kSqrt34 = 0.866025403784; // sqrt(0.75);
+  double constexpr kSqrt34 = 0.866025403784;  // sqrt(0.75);
   auto beta = kSqrt34 * max_gyro_error;
 
   // The objective function is the difference between
