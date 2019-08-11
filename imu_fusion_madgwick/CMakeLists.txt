@@ -12,7 +12,7 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wno-error=deprecated-copy)
 endif()
 
 # find dependencies
@@ -34,7 +34,7 @@ ament_target_dependencies(${PROJECT_NAME}
   "sensor_msgs"
   "tf2_eigen")
 
-# target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
+target_compile_options(${PROJECT_NAME} PRIVATE)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "IMU_FUSION_MADGWICK_BUILDING_LIBRARY")
 
@@ -55,7 +55,7 @@ target_include_directories(${PROJECT_NAME}_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
-# target_compile_options(${PROJECT_NAME}_node PRIVATE -Werror)
+target_compile_options(${PROJECT_NAME}_node PRIVATE)
 
 install(TARGETS ${PROJECT_NAME}_node
   EXPORT export_${PROJECT_NAME}
