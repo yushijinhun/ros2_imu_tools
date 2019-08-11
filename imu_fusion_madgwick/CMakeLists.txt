@@ -13,7 +13,7 @@ endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   include(CheckCXXCompilerFlag)
-  CHECK_CXX_COMPILER_FLAG(-Wno-error=deprecated-copy COMPILER_SUPPORTS_DEPRECATED_COPY)
+  check_cxx_compiler_flag(-Wno-error=deprecated-copy COMPILER_SUPPORTS_DEPRECATED_COPY)
 
   add_compile_options(-Wall -Wextra -Wpedantic -Werror)
   if(COMPILER_SUPPORTS_DEPRECATED_COPY)
