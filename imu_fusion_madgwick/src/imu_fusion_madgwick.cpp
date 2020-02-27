@@ -37,12 +37,12 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   RCLCPP_INFO(get_logger(), "Initialise robot orientation");
   reset();
 
-  pub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data", 10);
+  pub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data", rclcpp::SensorDataQoS());
 
   RCLCPP_INFO(get_logger(), "Subscribe to /imu/data_raw");
   sub_ = create_subscription<sensor_msgs::msg::Imu>(
     "/imu/data_raw",
-    10,
+    rclcpp::SensorDataQoS(),
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuMsg) {
       if (!use_fixed_dt_) {
         // TODO(scheunemann) auto time = imuRawMsg->header.stamp;
