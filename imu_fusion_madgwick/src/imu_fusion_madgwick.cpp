@@ -14,7 +14,10 @@
 
 #include "imu_fusion_madgwick/imu_fusion_madgwick.hpp"
 
-#include <tf2/transform_datatypes.h>
+#include <tf2/time.h>
+#include <tf2/buffer_core.h>
+#include <tf2_ros/transform_listener.h>
+#include <tf2_ros/transform_broadcaster.h>
 
 namespace imu_fusion_madgwick
 {
@@ -22,9 +25,7 @@ namespace imu_fusion_madgwick
 IMUFusionMadgwick::IMUFusionMadgwick()
 : rclcpp::Node{"imu_fusion_madgwick"},
   last_update_time_(now()),
-  orientation_{Eigen::Quaterniond::Identity()},
-  tf_broadcaster_(this->shared_from_this()),
-  static_tf_broadcaster_(this->shared_from_this())
+  orientation_{Eigen::Quaterniond::Identity()}
 {
   gyro_measuring_error_ =
     declare_parameter("gyro_measuring_error", 3.14159265358979f * (5.0f / 180.0f));
@@ -37,6 +38,9 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   use_fixed_dt_ = declare_parameter("use_fixed_dt", false);
   dt_ = declare_parameter("fixed_dt", 0.008);
 
+
+  tf_listener_    = std::make_unique<tf2_ros::TransformListener>(tf_buffer_);
+  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(this);
 
   RCLCPP_INFO(get_logger(), "Initialise robot orientation");
   reset();
@@ -67,13 +71,17 @@ IMUFusionMadgwick::IMUFusionMadgwick()
       RCLCPP_DEBUG(get_logger(), "Received raw IMU message and publish IMU message");
       pub_->publish(*imuMsg);
 
-      // create and transform tf
-      geometry_msgs::msg::TransformStamped transform;
-      transform.transform.set__rotation(imuMsg->orientation);
-      transform.set__child_frame_id("base_link");
-      transform.header = imuMsg->header;
+      //  transform to worldframe using IMU rotation
+      geometry_msgs::msg::TransformStamped transformStamped;
+      tf2::TimePoint timePoint; // getNow, maybe use imuMsg->header.stamp?
 
-      tf_broadcaster_.sendTransform(transform);
+      const std::string sourceFrame = "torso";
+      const std::string targetFrame = "base_link";
+
+      transformStamped = tf_buffer_.lookupTransform(targetFrame, sourceFrame, timePoint);
+
+      transformStamped.transform.rotation = imuMsg->orientation;
+      tf_broadcaster_->sendTransform(transformStamped);
     });
 }
 
