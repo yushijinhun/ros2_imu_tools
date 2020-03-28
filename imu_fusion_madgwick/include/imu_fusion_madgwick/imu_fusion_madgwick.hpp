@@ -18,7 +18,6 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 
-#include <tf2/time.h>
 #include <tf2/buffer_core.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
@@ -97,8 +96,8 @@ private:
   Eigen::Quaterniond orientation_;
 
   tf2::BufferCore tf_buffer_;
-  std::unique_ptr<tf2_ros::TransformListener> tf_listener_;
-  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+  tf2_ros::TransformListener tf_listener_;
+  tf2_ros::TransformBroadcaster tf_broadcaster_;
 };
 
 }  // namespace imu_fusion_madgwick

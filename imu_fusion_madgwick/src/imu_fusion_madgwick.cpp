@@ -19,13 +19,17 @@
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
 
+#include <string>
+
 namespace imu_fusion_madgwick
 {
 
 IMUFusionMadgwick::IMUFusionMadgwick()
 : rclcpp::Node{"imu_fusion_madgwick"},
   last_update_time_(now()),
-  orientation_{Eigen::Quaterniond::Identity()}
+  orientation_{Eigen::Quaterniond::Identity()},
+  tf_listener_(tf_buffer_),
+  tf_broadcaster_(this)
 {
   gyro_measuring_error_ =
     declare_parameter("gyro_measuring_error", 3.14159265358979f * (5.0f / 180.0f));
@@ -37,10 +41,6 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   // static sampling periodin seconds
   use_fixed_dt_ = declare_parameter("use_fixed_dt", false);
   dt_ = declare_parameter("fixed_dt", 0.008);
-
-
-  tf_listener_    = std::make_unique<tf2_ros::TransformListener>(tf_buffer_);
-  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(this);
 
   RCLCPP_INFO(get_logger(), "Initialise robot orientation");
   reset();
@@ -73,7 +73,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
 
       //  transform to worldframe using IMU rotation
       geometry_msgs::msg::TransformStamped transformStamped;
-      tf2::TimePoint timePoint; // getNow, maybe use imuMsg->header.stamp?
+      tf2::TimePoint timePoint;  // getNow, maybe use imuMsg->header.stamp?
 
       const std::string sourceFrame = "torso";
       const std::string targetFrame = "base_link";
@@ -81,7 +81,8 @@ IMUFusionMadgwick::IMUFusionMadgwick()
       transformStamped = tf_buffer_.lookupTransform(targetFrame, sourceFrame, timePoint);
 
       transformStamped.transform.rotation = imuMsg->orientation;
-      tf_broadcaster_->sendTransform(transformStamped);
+
+      tf_broadcaster_.sendTransform(transformStamped);
     });
 }
 
