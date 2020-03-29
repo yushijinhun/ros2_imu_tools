@@ -24,6 +24,8 @@
 
 #include <Eigen/Geometry>
 
+#include <string>
+
 namespace imu_fusion_madgwick
 {
 
@@ -83,8 +85,9 @@ public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 private:
-
-  void transform_to_worldframe(geometry_msgs::msg::Quaternion const & orientation, std::string const & source_frame, std::string const & target_frame);
+  void transform_to_worldframe(
+    geometry_msgs::msg::Quaternion const & orientation,
+    std::string const & source_frame, std::string const & target_frame);
 
   // parameter
   bool use_fixed_dt_;

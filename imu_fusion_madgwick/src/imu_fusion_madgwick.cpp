@@ -35,7 +35,8 @@ IMUFusionMadgwick::IMUFusionMadgwick()
 {
   gyro_measuring_error_ =
     declare_parameter("gyro_measuring_error", 3.14159265358979f * (5.0f / 180.0f));
-  RCLCPP_INFO(get_logger(), "Use parameter: gyro measuring error (" + std::to_string(gyro_measuring_error_) + ")");
+  RCLCPP_INFO(get_logger(),
+    "Use parameter: gyro measuring error (" + std::to_string(gyro_measuring_error_) + ")");
 
   // gain is unused
   // float beta;
@@ -45,8 +46,9 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   use_fixed_dt_ = declare_parameter("use_fixed_dt", false);
   dt_ = declare_parameter("fixed_dt", 0.008);
 
-  if (use_fixed_dt_)
+  if (use_fixed_dt_) {
     RCLCPP_INFO(get_logger(), "Use parameter: fixed dt (" + std::to_string(dt_) + ")");
+  }
 
   auto source_frame = declare_parameter<std::string>("source_frame", "torso");
   auto target_frame = declare_parameter<std::string>("target_frame", "base_link");
@@ -200,22 +202,24 @@ void IMUFusionMadgwick::integrate(
   orientation_.normalize();
 }
 
-void IMUFusionMadgwick::transform_to_worldframe(geometry_msgs::msg::Quaternion const & orientation, std::string const & source_frame, std::string const & target_frame) {
+void IMUFusionMadgwick::transform_to_worldframe(
+  geometry_msgs::msg::Quaternion const & orientation,
+  std::string const & source_frame,
+  std::string const & target_frame)
+{
+  geometry_msgs::msg::TransformStamped transformStamped;
+  tf2::TimePoint timePoint;    // getNow, maybe use imuMsg->header.stamp?
 
-    geometry_msgs::msg::TransformStamped transformStamped;
-    tf2::TimePoint timePoint;  // getNow, maybe use imuMsg->header.stamp?
-
-    try {
-      transformStamped = tf_buffer_.lookupTransform(target_frame, source_frame, timePoint);
-      transformStamped.transform.rotation = orientation;
-      tf_broadcaster_.sendTransform(transformStamped);
-      RCLCPP_DEBUG(get_logger(), "Transform target frame (" + target_frame + ") to source frame (" + source_frame + ")");
-    }
-    catch(tf2::TransformException ex) {
-      RCLCPP_WARN(get_logger(), ex.what());
-    }
-
-
+  try {
+    transformStamped = tf_buffer_.lookupTransform(target_frame, source_frame, timePoint);
+    transformStamped.transform.rotation = orientation;
+    tf_broadcaster_.sendTransform(transformStamped);
+    RCLCPP_DEBUG(
+      get_logger(),
+      "Transform target frame (" + target_frame + ") to source frame (" + source_frame + ")");
+  } catch (tf2::TransformException ex) {
+    RCLCPP_WARN(get_logger(), ex.what());
+  }
 }
 
 }  // namespace imu_fusion_madgwick
