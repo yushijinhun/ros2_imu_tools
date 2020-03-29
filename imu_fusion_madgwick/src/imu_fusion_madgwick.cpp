@@ -35,6 +35,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
 {
   gyro_measuring_error_ =
     declare_parameter("gyro_measuring_error", 3.14159265358979f * (5.0f / 180.0f));
+  RCLCPP_INFO(get_logger(), "Use parameter: gyro measuring error (" + std::to_string(gyro_measuring_error_) + ")");
 
   // gain is unused
   // float beta;
@@ -43,6 +44,15 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   // static sampling periodin seconds
   use_fixed_dt_ = declare_parameter("use_fixed_dt", false);
   dt_ = declare_parameter("fixed_dt", 0.008);
+
+  if (use_fixed_dt_)
+    RCLCPP_INFO(get_logger(), "Use parameter: fixed dt (" + std::to_string(dt_) + ")");
+
+  auto source_frame = declare_parameter<std::string>("source_frame", "torso");
+  auto target_frame = declare_parameter<std::string>("target_frame", "base_link");
+  RCLCPP_INFO(get_logger(), "TF source frame: " + source_frame);
+  RCLCPP_INFO(get_logger(), "TF target frame: " + target_frame);
+
 
   RCLCPP_INFO(get_logger(), "Initialise robot orientation");
   reset();
@@ -74,7 +84,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
       pub_->publish(*imuMsg);
 
       //  transform to worldframe using IMU rotation
-      transform_to_worldframe(imuMsg->orientation);
+      transform_to_worldframe(imuMsg->orientation, source_frame, target_frame);
     });
 }
 
@@ -190,21 +200,18 @@ void IMUFusionMadgwick::integrate(
   orientation_.normalize();
 }
 
-void IMUFusionMadgwick::transform_to_worldframe(geometry_msgs::msg::Quaternion const & orientation) {
+void IMUFusionMadgwick::transform_to_worldframe(geometry_msgs::msg::Quaternion const & orientation, std::string const & source_frame, std::string const & target_frame) {
 
     geometry_msgs::msg::TransformStamped transformStamped;
     tf2::TimePoint timePoint;  // getNow, maybe use imuMsg->header.stamp?
 
-    const std::string sourceFrame = "torso";
-    const std::string targetFrame = "base_link";
-
     try {
-        transformStamped = tf_buffer_.lookupTransform(targetFrame, sourceFrame, timePoint);
-        transformStamped.transform.rotation = orientation;
-        tf_broadcaster_.sendTransform(transformStamped);
+      transformStamped = tf_buffer_.lookupTransform(target_frame, source_frame, timePoint);
+      transformStamped.transform.rotation = orientation;
+      tf_broadcaster_.sendTransform(transformStamped);
+      RCLCPP_DEBUG(get_logger(), "Transform target frame (" + target_frame + ") to source frame (" + source_frame + ")");
     }
     catch(tf2::TransformException ex) {
-
       RCLCPP_WARN(get_logger(), ex.what());
     }
 
