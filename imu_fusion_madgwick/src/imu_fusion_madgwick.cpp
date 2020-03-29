@@ -19,6 +19,8 @@
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
 
+#include <rclcpp/logging.hpp>
+
 #include <string>
 
 namespace imu_fusion_madgwick
@@ -196,11 +198,16 @@ void IMUFusionMadgwick::transform_to_worldframe(geometry_msgs::msg::Quaternion c
     const std::string sourceFrame = "torso";
     const std::string targetFrame = "base_link";
 
-    transformStamped = tf_buffer_.lookupTransform(targetFrame, sourceFrame, timePoint);
+    try {
+        transformStamped = tf_buffer_.lookupTransform(targetFrame, sourceFrame, timePoint);
+        transformStamped.transform.rotation = orientation;
+        tf_broadcaster_.sendTransform(transformStamped);
+    }
+    catch(tf2::TransformException ex) {
 
-    transformStamped.transform.rotation = orientation;
+      RCLCPP_WARN(get_logger(), ex.what());
+    }
 
-    tf_broadcaster_.sendTransform(transformStamped);
 
 }
 
