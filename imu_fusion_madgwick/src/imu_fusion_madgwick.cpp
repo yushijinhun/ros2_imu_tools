@@ -72,17 +72,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
       pub_->publish(*imuMsg);
 
       //  transform to worldframe using IMU rotation
-      geometry_msgs::msg::TransformStamped transformStamped;
-      tf2::TimePoint timePoint;  // getNow, maybe use imuMsg->header.stamp?
-
-      const std::string sourceFrame = "torso";
-      const std::string targetFrame = "base_link";
-
-      transformStamped = tf_buffer_.lookupTransform(targetFrame, sourceFrame, timePoint);
-
-      transformStamped.transform.rotation = imuMsg->orientation;
-
-      tf_broadcaster_.sendTransform(transformStamped);
+      transform_to_worldframe(imuMsg->orientation);
     });
 }
 
@@ -196,6 +186,22 @@ void IMUFusionMadgwick::integrate(
 
   orientation_.coeffs() -= beta * normalized_objective_function_gradient * interval;
   orientation_.normalize();
+}
+
+void IMUFusionMadgwick::transform_to_worldframe(geometry_msgs::msg::Quaternion const & orientation) {
+
+    geometry_msgs::msg::TransformStamped transformStamped;
+    tf2::TimePoint timePoint;  // getNow, maybe use imuMsg->header.stamp?
+
+    const std::string sourceFrame = "torso";
+    const std::string targetFrame = "base_link";
+
+    transformStamped = tf_buffer_.lookupTransform(targetFrame, sourceFrame, timePoint);
+
+    transformStamped.transform.rotation = orientation;
+
+    tf_broadcaster_.sendTransform(transformStamped);
+
 }
 
 }  // namespace imu_fusion_madgwick
