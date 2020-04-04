@@ -1,4 +1,4 @@
-// Copyright 2019 Bold Hearts
+// Copyright 2020 Bold Hearts
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ IMUTF::IMUTF()
   tf_listener_(tf_buffer_),
   tf_broadcaster_(this)
 {
-
   auto source_frame = declare_parameter<std::string>("source_frame", "torso");
   auto target_frame = declare_parameter<std::string>("target_frame", "base_link");
   RCLCPP_INFO(get_logger(), "TF source frame: " + source_frame);
@@ -45,7 +44,6 @@ IMUTF::IMUTF()
     "/imu/data",
     rclcpp::SensorDataQoS(),
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuMsg) {
-
       RCLCPP_DEBUG(get_logger(), "Received IMU message and broadcast new TF");
 
       transform_to_worldframe(imuMsg->orientation, source_frame, target_frame);

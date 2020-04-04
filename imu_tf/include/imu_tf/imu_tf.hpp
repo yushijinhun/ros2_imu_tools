@@ -1,4 +1,4 @@
-// Copyright 2019 Bold Hearts
+// Copyright 2020 Bold Hearts
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -48,10 +48,9 @@ private:
   tf2::BufferCore tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
   tf2_ros::TransformBroadcaster tf_broadcaster_;
-
 };
 
 
-}  // namespace IMU_TF
+}  // namespace imu_tf
 
 #endif  // IMU_TF__IMU_TF_HPP_
