@@ -39,7 +39,6 @@ public:
   using Quaternion = geometry_msgs::msg::Quaternion;
 
 private:
-
   rclcpp::Subscription<Imu>::SharedPtr sub_;
 
   void transform_to_worldframe(

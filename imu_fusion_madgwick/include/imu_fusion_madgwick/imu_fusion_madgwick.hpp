@@ -79,7 +79,6 @@ public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 private:
-
   // parameter
   bool use_fixed_dt_;
   float gyro_measuring_error_;
