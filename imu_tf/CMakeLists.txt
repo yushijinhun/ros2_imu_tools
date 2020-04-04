@@ -44,13 +44,13 @@ install(
   RUNTIME DESTINATION bin
 )
 
-add_executable(${PROJECT_NAME}_node src/imu_tf_node.cpp)
-target_include_directories(${PROJECT_NAME}_node PUBLIC
+add_executable(transform src/imu_tf_node.cpp)
+target_include_directories(transform PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
+target_link_libraries(transform ${PROJECT_NAME})
 
-install(TARGETS ${PROJECT_NAME}_node
+install(TARGETS transform
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME})
 
