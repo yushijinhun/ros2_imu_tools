@@ -68,8 +68,10 @@ TEST(OrientationTests, gyro_halfPiXHighFreq)
 
   auto quaternion = orientation.getEigenQuaternion();
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitX()).matrix(),
-    quaternion.matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitX()).matrix(),
+      quaternion.matrix()));
 }
 
 TEST(OrientationTests, gyro_halfPiX)
@@ -78,8 +80,10 @@ TEST(OrientationTests, gyro_halfPiX)
 
   orientation.integrate(Eigen::Vector3d{0.5 * M_PI, 0, 0}, 1.0);
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitX()).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitX()).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, gyro_halfPiY)
@@ -88,8 +92,10 @@ TEST(OrientationTests, gyro_halfPiY)
 
   orientation.integrate(Eigen::Vector3d{0, 0.5 * M_PI, 0}, 1.0);
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitY()).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitY()).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, gyro_halfPiZ)
@@ -97,8 +103,10 @@ TEST(OrientationTests, gyro_halfPiZ)
   imu_fusion_madgwick::IMUFusionMadgwick orientation;
   orientation.integrate(Eigen::Vector3d{0, 0, 0.5 * M_PI}, 1.0);
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitZ()).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitZ()).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, gyro_piX)
@@ -106,8 +114,10 @@ TEST(OrientationTests, gyro_piX)
   imu_fusion_madgwick::IMUFusionMadgwick orientation;
   orientation.integrate(Eigen::Vector3d{0.5 * M_PI, 0, 0}, 2.0);
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX()).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX()).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, gyro_piY)
@@ -115,8 +125,10 @@ TEST(OrientationTests, gyro_piY)
   imu_fusion_madgwick::IMUFusionMadgwick orientation;
   orientation.integrate(Eigen::Vector3d{0, 0.5 * M_PI, 0}, 2.0);
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitY()).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitY()).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, gyro_piZ)
@@ -124,8 +136,10 @@ TEST(OrientationTests, gyro_piZ)
   imu_fusion_madgwick::IMUFusionMadgwick orientation;
   orientation.integrate(Eigen::Vector3d{0, 0, 0.5 * M_PI}, 2.0);
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitZ()).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitZ()).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, gyro_quartPiX)
@@ -133,8 +147,10 @@ TEST(OrientationTests, gyro_quartPiX)
   imu_fusion_madgwick::IMUFusionMadgwick orientation;
   orientation.integrate(Eigen::Vector3d{0.5 * M_PI, 0, 0}, .5);
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(0.25 * M_PI, Eigen::Vector3d::UnitX()).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(0.25 * M_PI, Eigen::Vector3d::UnitX()).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, gyro_quartPiY)
@@ -142,8 +158,10 @@ TEST(OrientationTests, gyro_quartPiY)
   imu_fusion_madgwick::IMUFusionMadgwick orientation;
   orientation.integrate(Eigen::Vector3d{0, 0.5 * M_PI, 0}, .5);
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(0.25 * M_PI, Eigen::Vector3d::UnitY()).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(0.25 * M_PI, Eigen::Vector3d::UnitY()).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, gyro_quartPiZ)
@@ -151,8 +169,10 @@ TEST(OrientationTests, gyro_quartPiZ)
   imu_fusion_madgwick::IMUFusionMadgwick orientation;
   orientation.integrate(Eigen::Vector3d{0, 0, 0.5 * M_PI}, .5);
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(0.25 * M_PI, Eigen::Vector3d::UnitZ()).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(0.25 * M_PI, Eigen::Vector3d::UnitZ()).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, gyro_multiAxis)
@@ -160,9 +180,12 @@ TEST(OrientationTests, gyro_multiAxis)
   imu_fusion_madgwick::IMUFusionMadgwick orientation;
   orientation.integrate(Eigen::Vector3d{1.0, 1.0, 1.0}.normalized() * 2.0 / 3.0 * M_PI, 1.0);
 
-  EXPECT_TRUE(MatricesEqual(Eigen::AngleAxisd(2.0 / 3.0 * M_PI,
-    Eigen::Vector3d(1.0, 1.0, 1.0).normalized()).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      Eigen::AngleAxisd(
+        2.0 / 3.0 * M_PI,
+        Eigen::Vector3d(1.0, 1.0, 1.0).normalized()).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, gyro_zero)
@@ -180,9 +203,11 @@ TEST(OrientationTests, gyro_chained)
   orientation.integrate(Eigen::Vector3d{0.5 * M_PI, 0, 0}, 1.0);
   orientation.integrate(Eigen::Vector3d{0, 0, 0.5 * M_PI}, 1.0);
 
-  EXPECT_TRUE(MatricesEqual((Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitX()) *
-    Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitZ())).matrix(),
-    orientation.getEigenQuaternion().matrix()));
+  EXPECT_TRUE(
+    MatricesEqual(
+      (Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitX()) *
+      Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitZ())).matrix(),
+      orientation.getEigenQuaternion().matrix()));
 }
 
 TEST(OrientationTests, merged_no_error)
