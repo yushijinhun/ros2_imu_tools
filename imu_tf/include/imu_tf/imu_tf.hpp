@@ -34,10 +34,8 @@ public:
   virtual ~IMUTF();
 
 private:
-  using Imu = sensor_msgs::msg::Imu;
-  using Quaternion = geometry_msgs::msg::Quaternion;
 
-  rclcpp::Subscription<Imu>::SharedPtr sub_;
+  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr sub_;
 
   void publish_tf(
     std::unique_ptr<sensor_msgs::msg::Imu> & imuMsg,
