@@ -28,7 +28,8 @@ IMUFusionMadgwick::IMUFusionMadgwick()
 {
   gyro_measuring_error_ =
     declare_parameter("gyro_measuring_error", 3.14159265358979f * (5.0f / 180.0f));
-  RCLCPP_INFO(get_logger(),
+  RCLCPP_INFO(
+    get_logger(),
     "Use parameter: gyro measuring error (" + std::to_string(gyro_measuring_error_) + ")");
 
   // gain is unused
