@@ -1,6 +1,8 @@
 image: osrf/ros:foxy-desktop
 
 before_script:
+  - apt-get update
+  - apt install -y python3-pip
   - pip3 install -U pytest colcon-common-extensions
   
 build:
