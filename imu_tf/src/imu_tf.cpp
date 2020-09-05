@@ -17,8 +17,6 @@
 #include <sensor_msgs/msg/imu.hpp>
 #include <geometry_msgs/msg/quaternion.h>
 
-#include <tf2/buffer_core.h>
-#include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
 
 #include <rclcpp/logging.hpp>
@@ -30,7 +28,6 @@ namespace imu_tf
 
 IMUTF::IMUTF()
 : rclcpp::Node{"imu_tf"},
-  tf_listener_(tf_buffer_),
   tf_broadcaster_(this)
 {
   auto source_frame = declare_parameter<std::string>("source_frame", "base_link");
@@ -58,21 +55,18 @@ void IMUTF::transform_to_worldframe(
   std::string const & target_frame)
 {
   geometry_msgs::msg::TransformStamped transformStamped;
-  tf2::TimePoint timePoint;    // getNow, maybe use imuMsg->header.stamp?
+  transformStamped.header.stamp = now();
   transformStamped.header.frame_id = target_frame;
   transformStamped.child_frame_id = source_frame;
 
   transformStamped.transform.rotation = orientation;
 
-  try {
+  tf_broadcaster_.sendTransform(transformStamped);
 
-    tf_broadcaster_.sendTransform(transformStamped);
-    RCLCPP_DEBUG(
-      get_logger(),
-      "Transform target frame (" + target_frame + ") to source frame (" + source_frame + ")");
-  } catch (tf2::TransformException ex) {
-    RCLCPP_WARN(get_logger(), ex.what());
-  }
+  RCLCPP_DEBUG(
+    get_logger(),
+    "Transform target frame (" + target_frame + ") to source frame (" + source_frame + ")"
+  );
 }
 
 }  // namespace imu_tf
