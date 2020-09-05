@@ -22,6 +22,7 @@
 #include <rclcpp/logging.hpp>
 
 #include <string>
+#include <memory>
 
 namespace imu_tf
 {

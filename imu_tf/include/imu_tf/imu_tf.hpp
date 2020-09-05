@@ -22,6 +22,7 @@
 #include <tf2_ros/transform_broadcaster.h>
 
 #include <string>
+#include <memory>
 
 namespace imu_tf
 {
@@ -34,7 +35,6 @@ public:
   virtual ~IMUTF();
 
 private:
-
   rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr sub_;
 
   void publish_tf(
