@@ -38,28 +38,28 @@ IMUTF::IMUTF()
   RCLCPP_INFO(get_logger(), "Subscribe to /imu/data");
 
   sub_ = create_subscription<sensor_msgs::msg::Imu>(
-    "/imu/data",
+    "imu/data",
     rclcpp::SensorDataQoS(),
-    [ = ](sensor_msgs::msg::Imu::SharedPtr imuMsg) {
+    [ = ](sensor_msgs::msg::Imu::UniquePtr imuMsg) {
       RCLCPP_DEBUG(get_logger(), "Received IMU message and broadcast new TF");
 
-      transform_to_worldframe(imuMsg->orientation, source_frame, target_frame);
+      publish_tf(imuMsg, source_frame, target_frame);
     });
 }
 
 IMUTF::~IMUTF() {}
 
-void IMUTF::transform_to_worldframe(
-  geometry_msgs::msg::Quaternion const & orientation,
+void IMUTF::publish_tf(
+  std::unique_ptr<sensor_msgs::msg::Imu> & imuMsg,
   std::string const & source_frame,
   std::string const & target_frame)
 {
   geometry_msgs::msg::TransformStamped transformStamped;
-  transformStamped.header.stamp = now();
+  transformStamped.header.stamp = imuMsg->header.stamp;
   transformStamped.header.frame_id = target_frame;
   transformStamped.child_frame_id = source_frame;
 
-  transformStamped.transform.rotation = orientation;
+  transformStamped.transform.rotation = imuMsg->orientation;
 
   tf_broadcaster_.sendTransform(transformStamped);
 
