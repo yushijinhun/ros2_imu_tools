@@ -12,8 +12,8 @@ This package implements a filter for fusing accelerometer and gyrometer readings
 Provides a node `transform` which transforms latest `/tf` to world frame coordinates using the orientation retrieved from the subscribed topic `/imu/data` and then broadcasts the transformed `/tf`.
 
 Parameters: 
-- `source_frame` - `string`, default: `"torso"`
-- `target_frame` - `string`, default: `"base_link"`
+- `source_frame` - `string`, default: `"imu_link"`
+- `target_frame` - `string`, default: `"imu_link_oriented"`
 
 ### `imu_viz`
 

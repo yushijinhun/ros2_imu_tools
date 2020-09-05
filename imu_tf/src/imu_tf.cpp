@@ -30,8 +30,8 @@ IMUTF::IMUTF()
 : rclcpp::Node{"imu_tf"},
   tf_broadcaster_(this)
 {
-  auto source_frame = declare_parameter<std::string>("source_frame", "base_link");
-  auto target_frame = declare_parameter<std::string>("target_frame", "base_link_oriented");
+  auto source_frame = declare_parameter<std::string>("source_frame", "imu_link");
+  auto target_frame = declare_parameter<std::string>("target_frame", "imu_link_oriented");
   RCLCPP_INFO(get_logger(), "TF source frame: " + source_frame);
   RCLCPP_INFO(get_logger(), "TF target frame: " + target_frame);
 
