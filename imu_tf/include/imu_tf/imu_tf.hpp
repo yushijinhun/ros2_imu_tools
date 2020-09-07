@@ -38,7 +38,7 @@ private:
   rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr sub_;
 
   void publish_tf(
-    std::unique_ptr<sensor_msgs::msg::Imu> & imuMsg,
+    const sensor_msgs::msg::Imu imuMsg,
     std::string const & source_frame, std::string const & target_frame);
 
   tf2_ros::TransformBroadcaster tf_broadcaster_;

@@ -44,23 +44,23 @@ IMUTF::IMUTF()
     [ = ](sensor_msgs::msg::Imu::UniquePtr imuMsg) {
       RCLCPP_DEBUG(get_logger(), "Received IMU message and broadcast new TF");
 
-      publish_tf(imuMsg, source_frame, target_frame);
+      publish_tf(*imuMsg, source_frame, target_frame);
     });
 }
 
 IMUTF::~IMUTF() {}
 
 void IMUTF::publish_tf(
-  std::unique_ptr<sensor_msgs::msg::Imu> & imuMsg,
+  const sensor_msgs::msg::Imu imuMsg,
   std::string const & source_frame,
   std::string const & target_frame)
 {
   geometry_msgs::msg::TransformStamped transformStamped;
-  transformStamped.header.stamp = imuMsg->header.stamp;
+  transformStamped.header.stamp = imuMsg.header.stamp;
   transformStamped.header.frame_id = target_frame;
   transformStamped.child_frame_id = source_frame;
 
-  transformStamped.transform.rotation = imuMsg->orientation;
+  transformStamped.transform.rotation = imuMsg.orientation;
 
   tf_broadcaster_.sendTransform(transformStamped);
 
