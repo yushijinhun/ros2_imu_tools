@@ -20,7 +20,6 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(tf2_ros REQUIRED)
 find_package(tf2_eigen REQUIRED)
 
 add_library(${PROJECT_NAME}
@@ -33,7 +32,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 ament_target_dependencies(${PROJECT_NAME}
   "rclcpp"
   "sensor_msgs"
-  "tf2_ros"
   "tf2_eigen")
 
 # target_compile_options(${PROJECT_NAME} PRIVATE -Werror)

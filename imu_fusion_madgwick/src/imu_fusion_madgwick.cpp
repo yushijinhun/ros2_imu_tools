@@ -14,7 +14,6 @@
 
 #include "imu_fusion_madgwick/imu_fusion_madgwick.hpp"
 
-#include <tf2/time.h>
 #include <rclcpp/logging.hpp>
 #include <string>
 
