@@ -14,6 +14,9 @@
 
 #include "imu_fusion_madgwick/imu_fusion_madgwick.hpp"
 
+#include <rclcpp/logging.hpp>
+#include <string>
+
 namespace imu_fusion_madgwick
 {
 
@@ -24,6 +27,9 @@ IMUFusionMadgwick::IMUFusionMadgwick()
 {
   gyro_measuring_error_ =
     declare_parameter("gyro_measuring_error", 3.14159265358979f * (5.0f / 180.0f));
+  RCLCPP_INFO(
+    get_logger(),
+    "Use parameter: gyro measuring error (" + std::to_string(gyro_measuring_error_) + ")");
 
   // gain is unused
   // float beta;
@@ -32,6 +38,10 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   // static sampling periodin seconds
   use_fixed_dt_ = declare_parameter("use_fixed_dt", false);
   dt_ = declare_parameter("fixed_dt", 0.008);
+
+  if (use_fixed_dt_) {
+    RCLCPP_INFO(get_logger(), "Use parameter: fixed dt (" + std::to_string(dt_) + ")");
+  }
 
 
   RCLCPP_INFO(get_logger(), "Initialise robot orientation");
