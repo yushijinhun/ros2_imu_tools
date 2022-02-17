@@ -21,6 +21,7 @@ find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(tf2_eigen REQUIRED)
+find_package(rclcpp_components REQUIRED)
 
 add_library(${PROJECT_NAME}
   src/imu_fusion_madgwick.cpp)
@@ -32,11 +33,17 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 ament_target_dependencies(${PROJECT_NAME}
   "rclcpp"
   "sensor_msgs"
-  "tf2_eigen")
+  "tf2_eigen"
+  "rclcpp_components")
 
 # target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "IMU_FUSION_MADGWICK_BUILDING_LIBRARY")
+
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "imu_fusion_madgwick::IMUFusionMadgwick"
+  EXECUTABLE ${PROJECT_NAME}_node
+)
 
 install(
   DIRECTORY include/
@@ -49,17 +56,6 @@ install(
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
-
-add_executable(${PROJECT_NAME}_node src/imu_fusion_madgwick_node.cpp)
-target_include_directories(${PROJECT_NAME}_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
-# target_compile_options(${PROJECT_NAME}_node PRIVATE -Werror)
-
-install(TARGETS ${PROJECT_NAME}_node
-  EXPORT export_${PROJECT_NAME}
-  DESTINATION lib/${PROJECT_NAME})
 
 ament_export_dependencies(
   "sensor_msgs"

@@ -20,8 +20,8 @@
 namespace imu_fusion_madgwick
 {
 
-IMUFusionMadgwick::IMUFusionMadgwick()
-: rclcpp::Node{"imu_fusion_madgwick"},
+IMUFusionMadgwick::IMUFusionMadgwick(const rclcpp::NodeOptions & options)
+: rclcpp::Node{"imu_fusion_madgwick", options},
   last_update_time_(now()),
   orientation_{Eigen::Quaterniond::Identity()}
 {
@@ -188,3 +188,7 @@ void IMUFusionMadgwick::integrate(
 }
 
 }  // namespace imu_fusion_madgwick
+
+#include <rclcpp_components/register_node_macro.hpp>
+
+RCLCPP_COMPONENTS_REGISTER_NODE(imu_fusion_madgwick::IMUFusionMadgwick)

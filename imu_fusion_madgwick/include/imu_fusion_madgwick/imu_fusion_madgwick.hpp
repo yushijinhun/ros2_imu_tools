@@ -26,7 +26,7 @@ namespace imu_fusion_madgwick
 class IMUFusionMadgwick : public rclcpp::Node
 {
 public:
-  IMUFusionMadgwick();
+  IMUFusionMadgwick(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
   virtual ~IMUFusionMadgwick();
 
