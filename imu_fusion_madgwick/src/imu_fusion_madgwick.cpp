@@ -29,7 +29,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
     declare_parameter("gyro_measuring_error", 3.14159265358979f * (5.0f / 180.0f));
   RCLCPP_INFO(
     get_logger(),
-    "Use parameter: gyro measuring error (" + std::to_string(gyro_measuring_error_) + ")");
+    "Use parameter: gyro measuring error (%f)", gyro_measuring_error_);
 
   // gain is unused
   // float beta;
@@ -40,7 +40,7 @@ IMUFusionMadgwick::IMUFusionMadgwick()
   dt_ = declare_parameter("fixed_dt", 0.008);
 
   if (use_fixed_dt_) {
-    RCLCPP_INFO(get_logger(), "Use parameter: fixed dt (" + std::to_string(dt_) + ")");
+    RCLCPP_INFO(get_logger(), "Use parameter: fixed dt (%f)", dt_);
   }
 
 

@@ -33,8 +33,8 @@ IMUTF::IMUTF()
 {
   auto source_frame = declare_parameter<std::string>("source_frame", "imu_link");
   auto target_frame = declare_parameter<std::string>("target_frame", "imu_link_oriented");
-  RCLCPP_INFO(get_logger(), "TF source frame: " + source_frame);
-  RCLCPP_INFO(get_logger(), "TF target frame: " + target_frame);
+  RCLCPP_INFO(get_logger(), "TF source frame: %s", source_frame.c_str());
+  RCLCPP_INFO(get_logger(), "TF target frame: %s", target_frame.c_str());
 
   RCLCPP_INFO(get_logger(), "Subscribe to /imu/data");
 
@@ -66,7 +66,8 @@ void IMUTF::publish_tf(
 
   RCLCPP_DEBUG(
     get_logger(),
-    "Transform target frame (" + target_frame + ") to source frame (" + source_frame + ")"
+    "Transform target frame (%s) to source frame (%s)",
+    target_frame.c_str(), source_frame.c_str()
   );
 }
 
