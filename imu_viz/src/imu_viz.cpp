@@ -24,7 +24,7 @@ ImuVizPublisher::ImuVizPublisher()
 : rclcpp::Node{"imu_viz_publisher"}
 {
   pub_ = create_publisher<visualization_msgs::msg::MarkerArray>(
-    "/imu/viz", rclcpp::SensorDataQoS());
+    "imu/viz", rclcpp::SensorDataQoS());
 
   //
   frame_id_ = declare_parameter("frame_id", std::string{"base_link"});
@@ -40,7 +40,7 @@ ImuVizPublisher::ImuVizPublisher()
   }
 
   sub_ = create_subscription<ImuData>(
-    "/imu/data",
+    "imu/data",
     rclcpp::SensorDataQoS(),
     [&](ImuData::SharedPtr imu_msg) {
       auto timeNow = now();

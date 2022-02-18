@@ -36,8 +36,6 @@ IMUTF::IMUTF()
   RCLCPP_INFO(get_logger(), "TF source frame: %s", source_frame.c_str());
   RCLCPP_INFO(get_logger(), "TF target frame: %s", target_frame.c_str());
 
-  RCLCPP_INFO(get_logger(), "Subscribe to /imu/data");
-
   sub_ = create_subscription<sensor_msgs::msg::Imu>(
     "imu/data",
     rclcpp::SensorDataQoS(),
@@ -46,6 +44,7 @@ IMUTF::IMUTF()
 
       publish_tf(*imuMsg, source_frame, target_frame);
     });
+  RCLCPP_INFO(get_logger(), "Subscribe to %s", sub_->get_topic_name());
 }
 
 IMUTF::~IMUTF() {}

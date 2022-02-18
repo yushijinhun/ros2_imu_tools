@@ -47,11 +47,11 @@ IMUFusionMadgwick::IMUFusionMadgwick(const rclcpp::NodeOptions & options)
   RCLCPP_INFO(get_logger(), "Initialise robot orientation");
   reset();
 
-  pub_ = create_publisher<sensor_msgs::msg::Imu>("/imu/data", rclcpp::SensorDataQoS());
+  pub_ = create_publisher<sensor_msgs::msg::Imu>("imu/data", rclcpp::SensorDataQoS());
+  RCLCPP_INFO(get_logger(), "Publish to %s", pub_->get_topic_name());
 
-  RCLCPP_INFO(get_logger(), "Subscribe to /imu/data_raw");
   sub_ = create_subscription<sensor_msgs::msg::Imu>(
-    "/imu/data_raw",
+    "imu/data_raw",
     rclcpp::SensorDataQoS(),
     [ = ](sensor_msgs::msg::Imu::SharedPtr imuMsg) {
       if (!use_fixed_dt_) {
@@ -73,6 +73,7 @@ IMUFusionMadgwick::IMUFusionMadgwick(const rclcpp::NodeOptions & options)
       RCLCPP_DEBUG(get_logger(), "Received raw IMU message and publish IMU message");
       pub_->publish(*imuMsg);
     });
+  RCLCPP_INFO(get_logger(), "Subscribe to %s", sub_->get_topic_name());
 }
 
 IMUFusionMadgwick::~IMUFusionMadgwick()
